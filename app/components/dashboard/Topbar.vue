@@ -1,11 +1,15 @@
 <script setup lang="ts">
-import { ArrowDown, Setting, SwitchButton, UserFilled } from '@element-plus/icons-vue'
+import { ArrowDown, Moon, Setting, Sunny, SwitchButton, UserFilled } from '@element-plus/icons-vue'
+import { computed, ref } from 'vue'
+import { useDashboardData } from '~/composables/useDashboardData'
+import { useDashboardTheme } from '~/composables/useDashboardTheme'
 
 const props = defineProps<{ title: string }>()
 const handleBack = () => {}
 const openMenu = ref(false)
 const avatarError = ref(false)
 const { profile } = useDashboardData()
+const { isDark, toggleTheme } = useDashboardTheme()
 const hasAvatar = computed(() => Boolean(profile.value.avatar?.trim()) && !avatarError.value)
 </script>
 
@@ -16,7 +20,13 @@ const hasAvatar = computed(() => Boolean(profile.value.avatar?.trim()) && !avata
         <span class="text-xl font-semibold text-neutral-900 dark:text-white">{{ props.title }}</span>
       </template>
     </el-page-header>
-    <div class="relative">
+    <div class="relative flex items-center gap-2">
+      <button
+        class="flex h-9 w-9 items-center justify-center rounded-xl border border-neutral-200 bg-white text-neutral-700 transition-all duration-200 hover:shadow-md dark:border-white/10 dark:bg-neutral-800 dark:text-neutral-200"
+        @click="toggleTheme"
+      >
+        <el-icon><Moon v-if="isDark" /><Sunny v-else /></el-icon>
+      </button>
       <button
         class="flex items-center gap-2 rounded-xl border border-neutral-200 bg-white px-2 py-1.5 transition-all duration-200 hover:shadow-md dark:border-white/10 dark:bg-neutral-800"
         @click="openMenu = !openMenu"

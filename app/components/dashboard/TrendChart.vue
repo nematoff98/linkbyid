@@ -1,34 +1,46 @@
 <script setup lang="ts">
-const props = defineProps<{ labels: string[]; values: number[] }>()
+import { Chart, registerables } from 'chart.js'
+import { onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { useDashboardTheme } from '~/composables/useDashboardTheme'
 
-const points = computed(() => {
-  const max = Math.max(...props.values, 1)
-  return props.values.map((value, idx) => {
-    const x = (idx / Math.max(props.values.length - 1, 1)) * 100
-    const y = 100 - (value / max) * 100
-    return `${x},${y}`
-  }).join(' ')
-})
+const props = defineProps<{ labels: string[]; values: number[] }>()
+const { isDark } = useDashboardTheme()
+const chartRef = ref<HTMLCanvasElement | null>(null)
+let chart: Chart | null = null
+
+Chart.register(...registerables)
+
+const renderChart = () => {
+  if (!chartRef.value) return
+  chart?.destroy()
+  const textColor = isDark.value ? '#d4d4d8' : '#52525b'
+  const gridColor = isDark.value ? 'rgba(255,255,255,0.08)' : 'rgba(39,39,42,0.08)'
+  chart = new Chart(chartRef.value, {
+    type: 'line',
+    data: { labels: props.labels, datasets: [{ data: props.values, borderColor: '#6366f1', backgroundColor: 'rgba(99,102,241,0.15)', fill: true, tension: 0.35, pointRadius: 3, pointHoverRadius: 5 }] },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      animation: { duration: 800, easing: 'easeOutQuart' },
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { ticks: { color: textColor, font: { size: 10 } }, grid: { color: gridColor } },
+        y: { ticks: { color: textColor, font: { size: 10 } }, grid: { color: gridColor }, beginAtZero: true }
+      }
+    }
+  })
+}
+
+onMounted(renderChart)
+onBeforeUnmount(() => chart?.destroy())
+watch([() => props.values, () => isDark.value], renderChart, { deep: true })
 </script>
 
 <template>
   <div class="rounded-2xl border border-neutral-200 bg-white p-5 shadow-sm dark:border-white/10 dark:bg-neutral-900">
     <h3 class="text-sm font-semibold text-neutral-900 dark:text-white">Clicks Trend (7 days)</h3>
-    <svg viewBox="0 0 100 100" class="mt-4 h-44 w-full overflow-visible">
-      <polyline points="0,100 100,100" fill="none" stroke="#d4d4d8" stroke-width="0.8" />
-      <polyline :points="points" fill="none" stroke="#6366f1" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="line-path" />
-    </svg>
-    <div class="mt-2 grid grid-cols-7 gap-1 text-center text-[10px] text-neutral-500 dark:text-neutral-400">
-      <span v-for="label in props.labels" :key="label">{{ label }}</span>
+    <div class="mt-4 h-52">
+      <canvas ref="chartRef" />
     </div>
   </div>
 </template>
-
-<style scoped>
-.line-path {
-  stroke-dasharray: 400;
-  stroke-dashoffset: 400;
-  animation: draw-line .8s ease-out forwards;
-}
-@keyframes draw-line { to { stroke-dashoffset: 0; } }
-</style>

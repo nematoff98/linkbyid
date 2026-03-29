@@ -1,12 +1,14 @@
 <script setup lang="ts">
 import Sidebar from '~/components/dashboard/Sidebar.vue'
 import Topbar from '~/components/dashboard/Topbar.vue'
+import { useDashboardTheme } from '~/composables/useDashboardTheme'
 
 const props = defineProps<{ title: string }>()
+const { isDark } = useDashboardTheme()
 </script>
 
 <template>
-  <div class="min-h-screen bg-neutral-100 text-neutral-900 dark:bg-neutral-950 dark:text-neutral-100">
+  <div :class="{ dark: isDark }" class="min-h-screen bg-neutral-100 text-neutral-900 dark:bg-neutral-950 dark:text-neutral-100">
     <el-container class="mx-auto min-h-screen w-full">
       <el-aside width="240px" class="dashboard-aside">
         <Sidebar />
