@@ -109,7 +109,7 @@ useHead({
       @query-change="handleQueryChange"
     />
 
-    <div class="relative mb-5 mt-1 w-full border-b  border-b-neutral-200 dark:border-white/12 h-[210px] sm:h-[190px]">
+    <div class="relative mb-4 mt-1 h-[190px] w-full border-b border-b-neutral-200 dark:border-white/12 sm:mb-5 sm:h-[190px]">
       <Transition name="fade" mode="out-in">
         <div v-if="showSearchHint" class="w-full h-full flex justify-center items-center">
           <p class="text-center text-[12px] text-neutral-500 dark:text-neutral-400">Kodni kiriting, natija shu yerda chiqadi.</p>
@@ -132,10 +132,10 @@ useHead({
       </Transition>
     </div>
 
-    <div class="mt-2 w-full rounded-2xl border border-neutral-200 bg-neutral-50/70 p-4 pt-5 dark:border-white/12 dark:bg-neutral-900/45 sm:mt-3 sm:p-5 sm:pt-6">
-      <div class="mb-4 flex items-center justify-between gap-3 px-0.5">
-        <h3 class="text-[11px] font-semibold uppercase tracking-[0.18em] text-neutral-500 dark:text-neutral-400">Other products</h3>
-        <span class="rounded-full border border-neutral-200 bg-white px-2.5 py-1 text-[10px] font-medium uppercase tracking-[0.15em] text-neutral-600 dark:border-white/14 dark:bg-white/6 dark:text-neutral-300">by @{{ username }}</span>
+    <div class="mt-2 w-full rounded-2xl border border-neutral-200 bg-neutral-50/70 p-3.5 pt-4.5 dark:border-white/12 dark:bg-neutral-900/45 sm:mt-3 sm:p-5 sm:pt-6">
+      <div class="mb-4 flex flex-col items-start gap-2 px-0.5 sm:flex-row sm:items-center sm:justify-between sm:gap-3">
+        <h3 class="whitespace-nowrap text-[10px] font-semibold uppercase tracking-[0.14em] text-neutral-500 dark:text-neutral-400 sm:text-[11px] sm:tracking-[0.18em]">Other products</h3>
+        <span class="max-w-[70vw] truncate rounded-full border border-neutral-200 bg-white px-2.5 py-1 text-[10px] font-medium normal-case tracking-normal text-neutral-600 dark:border-white/14 dark:bg-white/6 dark:text-neutral-300 sm:max-w-none sm:uppercase sm:tracking-[0.15em]">by @{{ username }}</span>
       </div>
       <p class="mb-4 text-xs text-neutral-500 dark:text-neutral-400">Bu bo'lim kod qidiruvi natijasi emas, umumiy tavsiya qilingan mahsulotlar.</p>
       <div class="flex flex-col gap-3">

@@ -571,6 +571,24 @@
     semver "^7.5.3"
     tar "^7.4.0"
 
+"@morev/utils@^3.11.1":
+  version "3.15.0"
+  resolved "https://registry.npmmirror.com/@morev/utils/-/utils-3.15.0.tgz"
+  integrity sha512-QkoY06KcfDV6bYKamC/iFOXfoBn+JkZbKkGS5oOSTyAXtl5aHpW/N2gWJ8tAtbhSqkj2ZZA3Fo2jJYqL5SiDLw==
+  dependencies:
+    fast-copy "^3.0.2"
+    fast-equals "^5.0.1"
+    ohash "^1.1.4"
+    type-fest "^4.26.1"
+
+"@morev/vue-transitions@^3.0.5":
+  version "3.0.5"
+  resolved "https://registry.npmmirror.com/@morev/vue-transitions/-/vue-transitions-3.0.5.tgz"
+  integrity sha512-V+2HGHBb5MSOa0GGZ7V1wb3AExr4XcNLl98txdGNTsnhbqy4JRaFMaIsdo4zdaD9ShRZgBSZyZbujabxS50DSw==
+  dependencies:
+    "@morev/utils" "^3.11.1"
+    "@nuxt/kit" "^3.13.2"
+
 "@nodelib/fs.scandir@2.1.5":
   version "2.1.5"
   resolved "https://registry.npmmirror.com/@nodelib/fs.scandir/-/fs.scandir-2.1.5.tgz"
@@ -752,6 +770,33 @@
     mlly "^1.8.0"
     pathe "^2.0.3"
     unimport "^5.6.0"
+
+"@nuxt/kit@^3.13.2":
+  version "3.21.2"
+  resolved "https://registry.npmmirror.com/@nuxt/kit/-/kit-3.21.2.tgz"
+  integrity sha512-Bd6m6mrDrqpBEbX+g0rc66/ALd1sxlgdx5nfK9MAYO0yKLTOSK7McSYz1KcOYn3LQFCXOWfvXwaqih/b+REI1g==
+  dependencies:
+    c12 "^3.3.3"
+    consola "^3.4.2"
+    defu "^6.1.4"
+    destr "^2.0.5"
+    errx "^0.1.0"
+    exsolve "^1.0.8"
+    ignore "^7.0.5"
+    jiti "^2.6.1"
+    klona "^2.0.6"
+    knitwork "^1.3.0"
+    mlly "^1.8.1"
+    ohash "^2.0.11"
+    pathe "^2.0.3"
+    pkg-types "^2.3.0"
+    rc9 "^3.0.0"
+    scule "^1.3.0"
+    semver "^7.7.4"
+    tinyglobby "^0.2.15"
+    ufo "^1.6.3"
+    unctx "^2.5.0"
+    untyped "^2.0.0"
 
 "@nuxt/kit@^3.19.3", "@nuxt/kit@^3.21.0":
   version "3.21.2"
@@ -2986,10 +3031,20 @@ fake-indexeddb@^6.2.5:
   resolved "https://registry.npmmirror.com/fake-indexeddb/-/fake-indexeddb-6.2.5.tgz"
   integrity sha512-CGnyrvbhPlWYMngksqrSSUT1BAVP49dZocrHuK0SvtR0D5TMs5wP0o3j7jexDJW01KSadjBp1M/71o/KR3nD1w==
 
+fast-copy@^3.0.2:
+  version "3.0.2"
+  resolved "https://registry.npmmirror.com/fast-copy/-/fast-copy-3.0.2.tgz"
+  integrity sha512-dl0O9Vhju8IrcLndv2eU4ldt1ftXMqqfgN4H1cpmGV7P6jeB9FwpN9a2c8DPGE1Ys88rNUJVYDHq73CGAGOPfQ==
+
 fast-deep-equal@^3.1.1, fast-deep-equal@^3.1.3:
   version "3.1.3"
   resolved "https://registry.npmmirror.com/fast-deep-equal/-/fast-deep-equal-3.1.3.tgz"
   integrity sha512-f3qQ9oQy9j2AhBe/H9VC91wLmKBCCU/gDOnKNAYG5hswO7BLKj09Hc5HYNz9cGI++xlpDCIgDaitVs03ATR84Q==
+
+fast-equals@^5.0.1:
+  version "5.4.0"
+  resolved "https://registry.npmmirror.com/fast-equals/-/fast-equals-5.4.0.tgz"
+  integrity sha512-jt2DW/aNFNwke7AUd+Z+e6pz39KO5rzdbbFCg2sGafS4mk13MI7Z8O5z9cADNn5lhGODIgLwug6TZO2ctf7kcw==
 
 fast-fifo@^1.2.0, fast-fifo@^1.3.2:
   version "1.3.2"
@@ -4251,6 +4306,11 @@ ofetch@^2.0.0-alpha.3:
   version "2.0.0-alpha.3"
   resolved "https://registry.npmmirror.com/ofetch/-/ofetch-2.0.0-alpha.3.tgz"
   integrity sha512-zpYTCs2byOuft65vI3z43Dd6iSdFbOZZLb9/d21aCpx2rGastVU9dOCv0lu4ykc1Ur1anAYjDi3SUvR0vq50JA==
+
+ohash@^1.1.4:
+  version "1.1.6"
+  resolved "https://registry.npmmirror.com/ohash/-/ohash-1.1.6.tgz"
+  integrity sha512-TBu7PtV8YkAZn0tSxobKY2n2aAQva936lhRrj6957aDaCf9IEtqsKbgMzXE/F/sjqYOwmrukeORHNLe5glk7Cg==
 
 ohash@^2.0.11:
   version "2.0.11"
@@ -5535,6 +5595,11 @@ type-check@^0.4.0, type-check@~0.4.0:
   dependencies:
     prelude-ls "^1.2.1"
 
+type-fest@^4.26.1:
+  version "4.41.0"
+  resolved "https://registry.npmmirror.com/type-fest/-/type-fest-4.41.0.tgz"
+  integrity sha512-TeTSQ6H5YHvpqVwBRcnLDCBnDOHWYu7IvGbHT6N8AOymcr9PJGjc1GTtiWZTYg0NCgYwvnYWEkVChQAr9bjfwA==
+
 type-fest@^5.0.0:
   version "5.5.0"
   resolved "https://registry.npmmirror.com/type-fest/-/type-fest-5.5.0.tgz"
@@ -5972,7 +6037,7 @@ vue-toasted@^1.1.28:
   resolved "https://registry.npmmirror.com/vue-toasted/-/vue-toasted-1.1.28.tgz"
   integrity sha512-UUzr5LX51UbbiROSGZ49GOgSzFxaMHK6L00JV8fir/CYNJCpIIvNZ5YmS4Qc8Y2+Z/4VVYRpeQL2UO0G800Raw==
 
-"vue@^2.7.0 || ^3.2.25", vue@^3.0.0, vue@^3.2.0, vue@^3.2.25, vue@^3.3.0, vue@^3.3.4, vue@^3.5.0, vue@^3.5.13, vue@^3.5.27, vue@^3.5.30, vue@>=3.5.18, vue@3.5.31:
+"vue@^2.6.14 || >=3", "vue@^2.7.0 || ^3.2.25", vue@^3.0.0, vue@^3.2.0, vue@^3.2.25, vue@^3.3.0, vue@^3.3.4, vue@^3.5.0, vue@^3.5.13, vue@^3.5.27, vue@^3.5.30, vue@>=3.5.18, vue@3.5.31:
   version "3.5.31"
   resolved "https://registry.npmmirror.com/vue/-/vue-3.5.31.tgz"
   integrity sha512-iV/sU9SzOlmA/0tygSmjkEN6Jbs3nPoIPFhCMLD2STrjgOU8DX7ZtzMhg4ahVwf5Rp9KoFzcXeB1ZrVbLBp5/Q==

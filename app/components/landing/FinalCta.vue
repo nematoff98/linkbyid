@@ -9,27 +9,27 @@
       <div class="absolute -top-[300px] left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-indigo-500/30 blur-[100px] rounded-full pointer-events-none"></div>
     </div>
 
-    <div class="max-w-4xl mx-auto px-6 py-16 md:py-24 flex flex-col items-center text-center space-y-8 z-10 relative">
-      <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold text-3xl shadow-lg shadow-indigo-500/20 mb-2">
+    <div class="max-w-4xl mx-auto px-5 sm:px-6 py-12 sm:py-16 md:py-24 flex flex-col items-center text-center space-y-6 sm:space-y-8 z-10 relative">
+      <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-gradient-to-tr from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold text-2xl sm:text-3xl shadow-lg shadow-indigo-500/20 mb-1 sm:mb-2">
          <span class="translate-y-[2px]">#</span>
       </div>
       
-      <h2 class="text-4xl md:text-6xl font-bold text-white tracking-tight text-center max-w-3xl leading-[1.1]">
+      <h2 class="text-3xl sm:text-4xl md:text-6xl font-bold text-white tracking-tight text-center max-w-3xl leading-[1.1]">
         Start sharing <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">smarter links</span> today
       </h2>
       
-      <p class="text-xl text-neutral-400 max-w-xl mx-auto">
+      <p class="text-base sm:text-xl text-neutral-400 max-w-xl mx-auto">
         Join leading creators who are simplifying their bios and boosting their product conversions.
       </p>
 
-      <div class="pt-6">
-        <a href="#get-started" class="group relative inline-flex items-center justify-center overflow-hidden rounded-2xl px-12 py-5 bg-white text-neutral-950 font-bold text-lg hover:scale-105 active:scale-95 transition-all shadow-xl shadow-white/10 hover:shadow-white/20">
+      <div class="pt-4 sm:pt-6">
+        <NuxtLink to="/auth" class="group relative inline-flex items-center justify-center overflow-hidden rounded-2xl px-8 sm:px-12 py-4 sm:py-5 bg-white text-neutral-950 font-bold text-base sm:text-lg hover:scale-105 active:scale-95 transition-all shadow-xl shadow-white/10 hover:shadow-white/20">
           <span class="absolute inset-0 bg-gradient-to-r from-indigo-500/20 to-purple-500/20 opacity-0 group-hover:opacity-100 transition-opacity"></span>
           <span class="relative flex items-center gap-2">
             Get Started for Free
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="group-hover:translate-x-1 transition-transform"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
           </span>
-        </a>
+        </NuxtLink>
       </div>
       
       <p class="text-sm text-neutral-500 mt-4">No credit card required to start.</p>

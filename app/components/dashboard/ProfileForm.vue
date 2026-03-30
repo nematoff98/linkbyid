@@ -1,13 +1,18 @@
 <script setup lang="ts">
+import { reactive, ref, watch } from 'vue'
 import type { ProfileSettings } from '~/types/dashboard'
 
 const props = defineProps<{ modelValue: ProfileSettings }>()
-const emit = defineEmits<{ (e: 'save', payload: ProfileSettings): void }>()
+const emit = defineEmits<{
+  (e: 'save', payload: ProfileSettings): void
+  (e: 'change', payload: ProfileSettings): void
+}>()
 
 const profileForm = reactive({ ...props.modelValue })
 const formError = ref('')
 
 watch(() => props.modelValue, (value) => Object.assign(profileForm, value), { immediate: true })
+watch(profileForm, () => emit('change', { ...profileForm }), { deep: true })
 
 const onAvatarChange = (event: Event) => {
   const file = (event.target as HTMLInputElement).files?.[0]

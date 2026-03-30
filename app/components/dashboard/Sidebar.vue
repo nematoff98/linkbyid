@@ -51,13 +51,14 @@ const menuStyle = computed(() => isDark.value ? {
 </template>
 
 <style scoped>
+:deep(.dashboard-menu .el-menu-item) {
+  height: 40px;
+}
 :deep(.dashboard-menu .el-menu-item.is-active) {
-  background-color: rgb(23, 27, 42);
   color: rgb(83, 70, 241);
 }
 
 :deep(.dark .dashboard-menu .el-menu-item.is-active) {
-  background-color: rgba(99, 102, 241, 0.2);
   color: rgb(199 210 254);
 }
 </style>

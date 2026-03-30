@@ -4,11 +4,11 @@ const isAnnual = ref(false)
 </script>
 
 <template>
-  <section id="pricing" class="w-full py-16">
-    <div class="text-center max-w-2xl mx-auto mb-16 space-y-4">
+  <section id="pricing" class="w-full py-12 sm:py-16">
+    <div class="text-center max-w-2xl mx-auto mb-12 sm:mb-16 space-y-4">
       <h2 class="text-indigo-400 font-semibold tracking-wide uppercase text-sm">Pricing</h2>
-      <h3 class="text-3xl md:text-5xl font-bold text-white tracking-tight">Simple pricing for creators</h3>
-      <p class="text-neutral-400 text-lg">Start for free, upgrade when you need supercharged features.</p>
+      <h3 class="text-2xl sm:text-3xl md:text-5xl font-bold text-white tracking-tight">Simple pricing for creators</h3>
+      <p class="text-neutral-400 text-base sm:text-lg">Start for free, upgrade when you need supercharged features.</p>
 
       <div class="flex items-center justify-center gap-3 pt-6">
         <span class="text-sm font-medium" :class="!isAnnual ? 'text-white' : 'text-neutral-500'">Monthly</span>
@@ -29,11 +29,11 @@ const isAnnual = ref(false)
     <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto px-4">
       
       <!-- Free Plan -->
-      <div class="bg-neutral-900 border border-neutral-800 rounded-[2rem] p-8 md:p-10 transition-transform hover:-translate-y-1">
-        <h4 class="text-2xl font-bold text-white mb-2">Free Link</h4>
+      <div class="bg-neutral-900 border border-neutral-800 rounded-[2rem] p-6 sm:p-8 md:p-10 transition-transform hover:-translate-y-1">
+        <h4 class="text-xl sm:text-2xl font-bold text-white mb-2">Free Link</h4>
         <p class="text-neutral-400 mb-6 text-sm">Perfect for getting started and testing the waters.</p>
         <div class="flex items-end gap-1 mb-8">
-          <span class="text-5xl font-black text-white">$0</span>
+          <span class="text-4xl sm:text-5xl font-black text-white">$0</span>
           <span class="text-neutral-500 mb-1 font-medium">/ forever</span>
         </div>
         <ul class="space-y-4 mb-8">
@@ -54,14 +54,14 @@ const isAnnual = ref(false)
       </div>
 
       <!-- Pro Plan -->
-      <div class="bg-gradient-to-b from-indigo-500/10 to-neutral-900 border border-indigo-500/50 rounded-[2rem] p-8 md:p-10 relative shadow-2xl shadow-indigo-500/10 transition-transform hover:-translate-y-1">
+      <div class="bg-gradient-to-b from-indigo-500/10 to-neutral-900 border border-indigo-500/50 rounded-[2rem] p-6 sm:p-8 md:p-10 relative shadow-2xl shadow-indigo-500/10 transition-transform hover:-translate-y-1">
         <div class="absolute inset-x-0 -top-px h-px bg-gradient-to-r from-transparent via-indigo-500 to-transparent"></div>
         <div class="absolute hidden sm:block top-6 right-6 px-3 py-1 rounded-full bg-indigo-500/20 text-indigo-300 text-xs font-bold uppercase tracking-wider border border-indigo-500/30">Most Popular</div>
         
-        <h4 class="text-2xl font-bold text-white mb-2">Pro Creator</h4>
+        <h4 class="text-xl sm:text-2xl font-bold text-white mb-2">Pro Creator</h4>
         <p class="text-neutral-400 mb-6 text-sm">Everything you need to scale your affiliate earnings.</p>
         <div class="flex items-end gap-1 mb-8">
-          <span class="text-5xl font-black text-white">$<span v-if="isAnnual">1.59</span><span v-else>1.99</span></span>
+          <span class="text-4xl sm:text-5xl font-black text-white">$<span v-if="isAnnual">1.59</span><span v-else>1.99</span></span>
           <span class="text-neutral-500 mb-1 font-medium">/ month</span>
         </div>
         <ul class="space-y-4 mb-8">

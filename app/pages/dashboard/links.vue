@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import DashboardLayout from '~/components/dashboard/DashboardLayout.vue'
 import LinkForm from '~/components/dashboard/LinkForm.vue'
 import LinkCard from '~/components/dashboard/LinkCard.vue'
 import type { DashboardLink } from '~/types/dashboard'
+
+definePageMeta({ layout: 'dashboard' })
 
 const { links, upsertLink, deleteLink } = useDashboardData()
 const editingLink = ref<DashboardLink | null>(null)
@@ -26,7 +27,7 @@ const cancelEdit = () => { editingLink.value = null }
 </script>
 
 <template>
-  <DashboardLayout title="Manage Links">
+  <div>
     <LinkForm :initial-link="editingLink" :loading="saveLoading" @save="saveLink" @cancel="cancelEdit" />
     <p v-if="pageError" class="mt-3 text-sm text-red-600">{{ pageError }}</p>
 
@@ -38,5 +39,5 @@ const cancelEdit = () => { editingLink.value = null }
       </div>
       <LinkCard v-for="link in links" v-else :key="link.id" :link="link" @edit="startEdit" @delete="deleteLink" />
     </section>
-  </DashboardLayout>
+  </div>
 </template>

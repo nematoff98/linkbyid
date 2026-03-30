@@ -55,13 +55,13 @@ const navLinks = [
 
       <!-- CTA -->
       <div class="flex items-center gap-5">
-        <a href="#login" class="text-sm font-medium text-neutral-300 hover:text-white transition-colors hidden sm:block focus:outline-none">Login</a>
-        <a href="#get-started" class="relative group px-5 py-2.5 rounded-xl bg-white text-neutral-950 font-semibold text-sm transition-all hover:scale-105 active:scale-95 shadow-md shadow-white/10 hover:shadow-white/20 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-neutral-950">
+        <NuxtLink to="/auth" class="text-sm font-medium text-neutral-300 hover:text-white transition-colors hidden sm:block focus:outline-none">Login</NuxtLink>
+        <NuxtLink to="/auth" class="relative group px-5 py-2.5 rounded-xl bg-white text-neutral-950 font-semibold text-sm transition-all hover:scale-105 active:scale-95 shadow-md shadow-white/10 hover:shadow-white/20 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-neutral-950">
           <span class="relative z-10 flex items-center gap-1.5">
             Get Started
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="transition-transform group-hover:translate-x-0.5"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
           </span>
-        </a>
+        </NuxtLink>
       </div>
     </div>
   </header>

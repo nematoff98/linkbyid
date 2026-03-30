@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import DashboardLayout from '~/components/dashboard/DashboardLayout.vue'
 import BillingPlanCard from '~/components/dashboard/BillingPlanCard.vue'
 import PaymentHistoryTable from '~/components/dashboard/PaymentHistoryTable.vue'
 import PricingCard from '~/components/dashboard/PricingCard.vue'
+
+definePageMeta({ layout: 'dashboard' })
 
 const { subscription, payments, actionLoading, actionLabel, openStripe, openBillingPortal, cancelSubscription } = useBillingData()
 
@@ -16,7 +17,7 @@ const handleAction = () => {
 </script>
 
 <template>
-  <DashboardLayout title="Billing">
+  <div>
     <section class="grid grid-cols-1 gap-4 lg:grid-cols-2">
       <BillingPlanCard
         :subscription="subscription"
@@ -34,5 +35,5 @@ const handleAction = () => {
     <section class="mt-6">
       <PaymentHistoryTable :payments="payments" />
     </section>
-  </DashboardLayout>
+  </div>
 </template>
