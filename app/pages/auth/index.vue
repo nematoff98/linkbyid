@@ -1,14 +1,37 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import AuthProviderButton from '~/components/auth/AuthProviderButton.vue'
+import { authService } from '~/services/auth.service'
 
 const loadingProvider = ref<'google' | 'apple' | null>(null)
+const cardVisible = ref(false)
+const authError = ref('')
+const { setSession } = useAuthSession()
+const config = useRuntimeConfig()
 
 const handleAuth = async (provider: 'google' | 'apple') => {
   loadingProvider.value = provider
-  await new Promise(resolve => setTimeout(resolve, 800))
-  if (import.meta.client) window.location.assign(`/dashboard?provider=${provider}`)
+  authError.value = ''
+  if (provider === 'google') {
+    const oauthUrl = `${config.public.apiBase}/api/auth/oauth/google`
+    if (import.meta.client) window.location.href = oauthUrl
+    return
+  }
+  try {
+    const email = 'apple.user@linkbycode.dev'
+    const response = await authService.oauthCallback(provider, email)
+    setSession(response.data)
+    await navigateTo('/dashboard/statistics', { replace: true })
+  } catch (error) {
+    authError.value = error instanceof Error ? error.message : 'Authorization failed'
+  } finally {
+    loadingProvider.value = null
+  }
 }
+
+onMounted(() => {
+  requestAnimationFrame(() => { cardVisible.value = true })
+})
 
 useHead({
   title: 'Login | Link by Code',
@@ -24,7 +47,10 @@ useHead({
     </div>
 
     <div class="relative mx-auto flex min-h-[80vh] w-full max-w-md items-center">
-      <section class="w-full rounded-3xl border border-white/12 bg-neutral-900/80 p-6 shadow-[0_28px_70px_-40px_rgba(99,102,241,0.9)] backdrop-blur-xl sm:p-7">
+      <section
+        class="w-full rounded-3xl border border-white/12 bg-neutral-900/80 p-6 shadow-[0_28px_70px_-40px_rgba(99,102,241,0.9)] backdrop-blur-xl transition-all duration-700 sm:p-7"
+        :class="cardVisible ? 'translate-y-0 scale-100 opacity-100' : 'translate-y-4 scale-[0.98] opacity-0'"
+      >
         <NuxtLink to="/" class="mb-6 inline-flex items-center gap-2 text-sm text-neutral-300 hover:text-white">
           <span class="text-lg">#</span> Link by Code
         </NuxtLink>
@@ -35,6 +61,7 @@ useHead({
           <AuthProviderButton label="Continue with Google" provider="google" :loading="loadingProvider === 'google'" @select="handleAuth" />
           <AuthProviderButton label="Continue with Apple" provider="apple" :loading="loadingProvider === 'apple'" @select="handleAuth" />
         </div>
+        <p v-if="authError" class="mt-3 text-sm text-red-400">{{ authError }}</p>
 
         <p class="mt-6 text-center text-xs text-neutral-500">By continuing, you agree to our Terms and Privacy Policy.</p>
       </section>

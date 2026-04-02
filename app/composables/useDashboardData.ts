@@ -1,4 +1,5 @@
 import type { DashboardLink, ProfileSettings } from '~/types/dashboard'
+import { profileService } from '~/services/profile.service'
 
 interface LinkInput {
   code?: string
@@ -8,27 +9,19 @@ interface LinkInput {
   url: string
 }
 
-const seedLinks: DashboardLink[] = [{
-  id: 1,
-  code: '8472',
-  title: 'iPhone 15 Pro',
-  description: 'Latest Apple flagship',
-  image: 'https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcS7JowFXLnk_5fjXAkgYPNQDnY8u1-KyxRYFktqievkFmqJOnOER1oxUqsOkqfs10Pe4nBRVag4jS2yPJV3Jc4Opnik_mJqNoDN7RM9lwIhos0lFJhFbq_sr0utueHcuKfSrZYhkTJcs-M&usqp=CAc',
-  url: 'https://example.com',
-  clicks: 124,
-  createdAt: new Date().toISOString()
-}]
-
 export const useDashboardData = () => {
-  const links = useState<DashboardLink[]>('dashboard-links', () => [...seedLinks])
+  const links = useState<DashboardLink[]>('dashboard-links', () => [])
   const profile = useState<ProfileSettings>('dashboard-profile', () => ({
-    username: 'creator_name',
-    bio: 'I share curated products from my videos.',
-    avatar: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQI3J8NKYVOAuvW7i5ndqRz3znDPK6ts3W8QA&s'
+    username: '',
+    bio: '',
+    avatar: ''
   }))
+  const currentUserId = useState<string>('dashboard-user-id', () => '')
+  const profileLoading = useState<boolean>('dashboard-profile-loading', () => false)
+  const profileLoaded = useState<boolean>('dashboard-profile-loaded', () => false)
 
   const totalClicks = computed(() => links.value.reduce((sum, link) => sum + link.clicks, 0))
-  const recentLinks = computed(() => [...links.value].sort((a, b) => b.id - a.id).slice(0, 5))
+  const recentLinks = computed(() => [...links.value].sort((a, b) => b.createdAt.localeCompare(a.createdAt)).slice(0, 5))
 
   const generateCode = () => String(Math.floor(1000 + Math.random() * 9000))
 
@@ -43,10 +36,10 @@ export const useDashboardData = () => {
     }
   }
 
-  const upsertLink = (input: LinkInput, currentId?: number) => {
+  const upsertLink = (input: LinkInput, currentId?: string) => {
     const code = input.code?.trim() || generateCode()
     const normalized: DashboardLink = {
-      id: currentId ?? Date.now(),
+      id: currentId ?? String(Date.now()),
       code,
       title: input.title.trim(),
       description: input.description.trim(),
@@ -60,9 +53,50 @@ export const useDashboardData = () => {
     else links.value[index] = normalized
   }
 
-  const deleteLink = (id: number) => {
+  const deleteLink = (id: string) => {
     links.value = links.value.filter(link => link.id !== id)
   }
 
-  return { links, profile, totalClicks, recentLinks, generateCode, fetchMetadata, upsertLink, deleteLink }
+  const loadMyProfile = async (force = false) => {
+    if (profileLoading.value) return
+    if (profileLoaded.value && !force) return
+
+    const { accessToken } = useAuthSession()
+    if (!accessToken.value) {
+      currentUserId.value = ''
+      profile.value = { username: '', bio: '', avatar: '' }
+      profileLoaded.value = false
+      return
+    }
+
+    profileLoading.value = true
+    try {
+      const response = await profileService.getMe()
+      const userData = response.data?.user
+      const profileData = response.data?.profile
+      currentUserId.value = userData?.id || ''
+      profile.value = {
+        username: profileData?.username || '',
+        bio: profileData?.bio || '',
+        avatar: profileData?.avatarUrl || userData?.avatarUrl || ''
+      }
+      profileLoaded.value = true
+    } finally {
+      profileLoading.value = false
+    }
+  }
+
+  return {
+    links,
+    profile,
+    currentUserId,
+    profileLoading,
+    totalClicks,
+    recentLinks,
+    generateCode,
+    fetchMetadata,
+    upsertLink,
+    deleteLink,
+    loadMyProfile
+  }
 }

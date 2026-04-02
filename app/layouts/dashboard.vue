@@ -1,13 +1,15 @@
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import ChatWidget from '~/components/dashboard/ChatWidget.vue'
 import Sidebar from '~/components/dashboard/Sidebar.vue'
 import Topbar from '~/components/dashboard/Topbar.vue'
+import { useDashboardData } from '~/composables/useDashboardData'
 import { useDashboardTheme } from '~/composables/useDashboardTheme'
 
 const route = useRoute()
 const { isDark } = useDashboardTheme()
+const { loadMyProfile } = useDashboardData()
 const mobileMenuOpen = ref(false)
 
 const pageTitle = computed(() => {
@@ -19,6 +21,10 @@ const pageTitle = computed(() => {
 
 watch(() => route.fullPath, () => {
   mobileMenuOpen.value = false
+})
+
+onMounted(() => {
+  loadMyProfile().catch(() => {})
 })
 </script>
 

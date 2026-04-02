@@ -6,9 +6,11 @@ export interface Product {
   description?: string
   imageUrl?: string
   url: string
+  userId?: string
 }
 
-defineProps<{ product: Product }>()
+const props = defineProps<{ product: Product }>()
+const emit = defineEmits<{ (e: 'card-click', product: Product): void }>()
 const fallbackImg = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="%23d4d4d8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>'
 
 const imageError = (event: Event) => {
@@ -24,6 +26,7 @@ const imageError = (event: Event) => {
     rel="noopener noreferrer"
     class="group flex w-full items-center gap-4 rounded-2xl border border-neutral-200 bg-white p-3.5 transition-all duration-200 hover:border-indigo-300 hover:shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-400/70 dark:border-white/12 dark:bg-neutral-900 dark:hover:border-indigo-300/45"
     data-testid="product-card"
+    @click="emit('card-click', props.product)"
   >
     <div class="relative flex h-[70px] w-[70px] shrink-0 items-center justify-center overflow-hidden rounded-xl border border-neutral-200 bg-neutral-100 sm:h-[78px] sm:w-[78px] dark:border-white/12 dark:bg-neutral-800">
       <img 

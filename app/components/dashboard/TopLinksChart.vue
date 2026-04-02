@@ -3,12 +3,17 @@ import { Chart, registerables } from 'chart.js'
 import { onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useDashboardTheme } from '~/composables/useDashboardTheme'
 
-const props = defineProps<{ items: Array<{ label: string; value: number }> }>()
+const props = defineProps<{ items: Array<{ label: string; value: number; fullLabel?: string }> }>()
 const { isDark } = useDashboardTheme()
 const chartRef = ref<HTMLCanvasElement | null>(null)
 let chart: Chart | null = null
 
 Chart.register(...registerables)
+
+const truncateLabel = (value: string, max = 14) => {
+  if (value.length <= max) return value
+  return `${value.slice(0, max - 1)}…`
+}
 
 const renderChart = () => {
   if (!chartRef.value) return
@@ -23,10 +28,29 @@ const renderChart = () => {
       responsive: true,
       maintainAspectRatio: false,
       animation: { duration: 700, easing: 'easeOutQuart' },
-      plugins: { legend: { display: false } },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            title: (items) => {
+              const idx = items?.[0]?.dataIndex ?? -1
+              if (idx < 0) return ''
+              return props.items[idx]?.fullLabel || props.items[idx]?.label || ''
+            },
+            label: (item) => `${item.raw} clicks`
+          }
+        }
+      },
       scales: {
         x: { ticks: { color: textColor, font: { size: 10 } }, grid: { color: gridColor }, beginAtZero: true },
-        y: { ticks: { color: textColor, font: { size: 10 } }, grid: { display: false } }
+        y: {
+          ticks: {
+            color: textColor,
+            font: { size: 10 },
+            callback: (_value, index) => truncateLabel(props.items[index]?.label || '')
+          },
+          grid: { display: false }
+        }
       }
     }
   })
