@@ -1,20 +1,29 @@
 <script setup lang="ts">
-import { ArrowDown, Menu, Moon, Setting, Sunny, SwitchButton, UserFilled } from '@element-plus/icons-vue'
+import { ArrowDown, Menu, Moon, Sunny, SwitchButton, UserFilled } from '@element-plus/icons-vue'
 import { computed, ref } from 'vue'
-import { useRouter } from 'vue-router'
 import { useDashboardData } from '~/composables/useDashboardData'
 import { useDashboardTheme } from '~/composables/useDashboardTheme'
 
 const props = defineProps<{ title: string }>()
 const emit = defineEmits<{ (e: 'toggle-sidebar'): void }>()
-const router = useRouter()
 const avatarError = ref(false)
 const { profile } = useDashboardData()
 const { isDark, toggleTheme } = useDashboardTheme()
+const { clearSession } = useAuthSession()
 const hasAvatar = computed(() => Boolean(profile.value.avatar?.trim()) && !avatarError.value)
 
+const logout = async () => {
+  clearSession()
+  if (import.meta.client) {
+    sessionStorage.clear()
+    localStorage.clear()
+  }
+  await clearNuxtData()
+  await navigateTo('/auth', { replace: true })
+}
+
 const onCommand = (command: string | number | object) => {
-  if (command === 'settings') router.push('/dashboard/profile')
+  if (command === 'logout') void logout()
 }
 </script>
 
@@ -43,7 +52,6 @@ const onCommand = (command: string | number | object) => {
           </button>
           <template #dropdown>
             <el-dropdown-menu>
-              <el-dropdown-item command="settings"><span class="flex items-center gap-2"><el-icon><Setting /></el-icon>Settings</span></el-dropdown-item>
               <el-dropdown-item command="logout"><span class="flex items-center gap-2 text-red-600"><el-icon><SwitchButton /></el-icon>Logout</span></el-dropdown-item>
             </el-dropdown-menu>
           </template>

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
 
-const loadingText = ref('Google orqali kirish yakunlanmoqda...')
+const loadingText = ref('Finishing Google sign-in…')
 const { setTokens, clearSession } = useAuthSession()
 
 onMounted(async () => {
@@ -17,7 +17,7 @@ onMounted(async () => {
   const hash = window.location.hash.replace(/^#/, '')
   if (!hash) {
     clearSession()
-    loadingText.value = "Noto'g'ri callback"
+    loadingText.value = 'Invalid callback'
     await navigateTo('/auth', { replace: true })
     return
   }
@@ -29,7 +29,7 @@ onMounted(async () => {
 
   if (!accessToken || !refreshToken || (provider !== 'google' && provider !== 'apple')) {
     clearSession()
-    loadingText.value = "Noto'g'ri callback"
+    loadingText.value = 'Invalid callback'
     await navigateTo('/auth', { replace: true })
     return
   }

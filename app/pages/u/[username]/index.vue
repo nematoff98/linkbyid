@@ -154,7 +154,7 @@ useHead(() => ({
     <div class="relative mb-4 mt-1 h-[190px] w-full border-b border-b-neutral-200 dark:border-white/12 sm:mb-5 sm:h-[190px]">
       <Transition name="fade" mode="out-in">
         <div v-if="showSearchHint" class="w-full h-full flex justify-center items-center">
-          <p class="text-center text-[12px] text-neutral-500 dark:text-neutral-400">Kodni kiriting, natija shu yerda chiqadi.</p>
+          <p class="text-center text-[12px] text-neutral-500 dark:text-neutral-400">Enter a code — results appear here.</p>
         </div>
 
         <div v-else-if="searchResult" class="w-full py-2">
@@ -169,7 +169,7 @@ useHead(() => ({
         </div>
 
         <div v-else-if="searchError && !isSearching" class="w-full pt-2">
-          <EmptyState title="Code topilmadi" message="Videodagi kodni qayta tekshirib, yana kiriting." />
+          <EmptyState title="Code not found" message="Check the code and try again." />
         </div>
       </Transition>
     </div>
@@ -179,11 +179,11 @@ useHead(() => ({
         <h3 class="whitespace-nowrap text-[10px] font-semibold uppercase tracking-[0.14em] text-neutral-500 dark:text-neutral-400 sm:text-[11px] sm:tracking-[0.18em]">Most popular</h3>
         <span class="max-w-[70vw] truncate rounded-full border border-neutral-200 bg-white px-2.5 py-1 text-[10px] font-medium normal-case tracking-normal text-neutral-600 dark:border-white/14 dark:bg-white/6 dark:text-neutral-300 sm:max-w-none sm:uppercase sm:tracking-[0.15em]">by @{{ username }}</span>
       </div>
-      <p class="mb-4 text-xs text-neutral-500 dark:text-neutral-400">Foydalanuvchilar eng ko'p bosgan linklar.</p>
+      <p class="mb-4 text-xs text-neutral-500 dark:text-neutral-400">Links users click the most.</p>
       <div class="flex flex-col gap-3">
          <ProductCard v-for="product in popularProducts" :key="product.id" :product="product" @card-click="trackProductClick" />
-         <p v-if="popularLoading" class="text-xs text-neutral-500 dark:text-neutral-400">Most popular links yuklanmoqda...</p>
-         <p v-if="!popularLoading && popularProducts.length === 0" class="text-xs text-neutral-500 dark:text-neutral-400">Most popular links topilmadi.</p>
+         <p v-if="popularLoading" class="text-xs text-neutral-500 dark:text-neutral-400">Loading most popular links…</p>
+         <p v-if="!popularLoading && popularProducts.length === 0" class="text-xs text-neutral-500 dark:text-neutral-400">No popular links found.</p>
       </div>
     </div>
 

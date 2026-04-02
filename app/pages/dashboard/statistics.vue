@@ -4,6 +4,7 @@ import StatCard from '~/components/dashboard/StatCard.vue'
 import TopLinksChart from '~/components/dashboard/TopLinksChart.vue'
 import TrendChart from '~/components/dashboard/TrendChart.vue'
 import { dashboardService, type AnalyticsMeResponse } from '~/services/dashboard.service'
+import { getApiErrorMessage } from '~/utils/apiError'
 
 definePageMeta({ layout: 'dashboard' })
 
@@ -27,26 +28,13 @@ const topItems = computed(() => analytics.value.top_links_by_clicks.slice(0, 7).
   value: link.clickCount
 })))
 
-const getApiErrorMessage = (error: unknown) => {
-  const fallback = 'Analytics maʼlumotini olishda xatolik bo‘ldi.'
-  if (!error || typeof error !== 'object') return fallback
-  const data = (error as { data?: Record<string, unknown> }).data
-  const nestedError = data?.error as Record<string, unknown> | undefined
-  const nestedMessage = nestedError?.message
-  if (Array.isArray(nestedMessage) && nestedMessage.length > 0) return nestedMessage.join(', ')
-  if (typeof nestedMessage === 'string' && nestedMessage.trim()) return nestedMessage
-  if (typeof data?.message === 'string') return data.message
-  if (error instanceof Error) return error.message
-  return fallback
-}
-
 const loadAnalytics = async () => {
   loading.value = true
   pageError.value = ''
   try {
     analytics.value = await dashboardService.getMyAnalytics()
   } catch (error) {
-    pageError.value = getApiErrorMessage(error)
+    pageError.value = getApiErrorMessage(error, 'Could not load analytics.')
   } finally {
     loading.value = false
   }
@@ -57,7 +45,7 @@ onMounted(loadAnalytics)
 
 <template>
   <p v-if="pageError" class="mb-4 rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700 dark:border-red-500/30 dark:bg-red-500/10 dark:text-red-300">{{ pageError }}</p>
-  <p v-if="loading" class="mb-4 text-sm text-neutral-500 dark:text-neutral-400">Analytics yuklanmoqda...</p>
+  <p v-if="loading" class="mb-4 text-sm text-neutral-500 dark:text-neutral-400">Loading analytics…</p>
 
   <section class="grid grid-cols-1 gap-4 md:grid-cols-3">
     <StatCard label="Total Links" :value="analytics.summary.links_count" helper="Managed product links" />
@@ -80,7 +68,7 @@ onMounted(loadAnalytics)
         </div>
         <span class="rounded-lg bg-indigo-50 px-2 py-1 text-xs font-semibold text-indigo-700 dark:bg-indigo-500/20 dark:text-indigo-200">{{ link.clickCount }} clicks</span>
       </li>
-      <li v-if="analytics.recent_links.length === 0" class="rounded-xl border border-dashed border-neutral-300 p-3 text-sm text-neutral-500 dark:border-white/20 dark:text-neutral-400">Most popular links mavjud emas.</li>
+      <li v-if="analytics.recent_links.length === 0" class="rounded-xl border border-dashed border-neutral-300 p-3 text-sm text-neutral-500 dark:border-white/20 dark:text-neutral-400">No popular links yet.</li>
     </ul>
   </section>
 </template>

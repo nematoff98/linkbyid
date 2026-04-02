@@ -3,6 +3,7 @@ import LinkForm from '~/components/dashboard/LinkForm.vue'
 import LinkCard from '~/components/dashboard/LinkCard.vue'
 import { linksService } from '~/services/links.service'
 import type { DashboardLink } from '~/types/dashboard'
+import { getApiErrorMessage } from '~/utils/apiError'
 
 definePageMeta({ layout: 'dashboard' })
 
@@ -17,19 +18,6 @@ const limit = ref(10)
 const totalPages = ref(1)
 const formResetKey = ref(0)
 const showUsernameWarning = computed(() => !profileLoading.value && !profile.value.username?.trim())
-
-const getApiErrorMessage = (error: unknown) => {
-  const fallback = 'So‘rov bajarilmadi. Iltimos qayta urinib ko‘ring.'
-  if (!error || typeof error !== 'object') return fallback
-  const data = (error as { data?: Record<string, unknown> }).data
-  const nestedError = data?.error as Record<string, unknown> | undefined
-  const nestedMessage = nestedError?.message
-  if (Array.isArray(nestedMessage) && nestedMessage.length > 0) return nestedMessage.join(', ')
-  if (typeof nestedMessage === 'string' && nestedMessage.trim()) return nestedMessage
-  if (typeof data?.message === 'string') return data.message
-  if (error instanceof Error) return error.message
-  return fallback
-}
 
 const loadLinks = async () => {
   loading.value = true
@@ -57,14 +45,14 @@ const saveLink = async (payload: {
     await loadMyProfile(true).catch(() => {})
   }
   if (!currentUserId.value) {
-    pageError.value = "Profil ma'lumotlari topilmadi. Iltimos qayta login qiling."
+    pageError.value = 'Profile data could not be loaded. Please sign in again.'
     return
   }
   if (!profile.value.username?.trim()) {
     await loadMyProfile(true).catch(() => {})
   }
   if (!editingLink.value && !profile.value.username?.trim()) {
-    pageError.value = 'Avval profile sahifasida username kiriting.'
+    pageError.value = 'Set a username on the Profile page first.'
     return
   }
   saveLoading.value = true
@@ -109,7 +97,7 @@ onMounted(async () => {
       v-if="showUsernameWarning"
       class="mb-3 rounded-xl border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-800 dark:border-amber-500/30 dark:bg-amber-500/10 dark:text-amber-200"
     >
-      Link qo‘shishdan oldin <NuxtLink to="/dashboard/profile" class="font-medium underline">Profile</NuxtLink> sahifasida username kiriting.
+      Set your username on the <NuxtLink to="/dashboard/profile" class="font-medium underline">Profile</NuxtLink> page before adding links.
     </div>
     <LinkForm :key="`link-form-${formResetKey}-${editingLink?.id || 'new'}`" :initial-link="editingLink" :loading="saveLoading" @save="saveLink" @cancel="cancelEdit" />
     <p v-if="pageError" class="mt-3 text-sm text-red-600">{{ pageError }}</p>

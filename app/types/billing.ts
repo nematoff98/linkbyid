@@ -2,7 +2,7 @@ export type PlanType = 'free' | 'pro'
 
 export type BillingStatusApi = 'active' | 'inactive'
 
-// Backend’ning `/billing/subscription/{userId}` javob formatiga mos keladi.
+// Matches backend `/billing/subscription/{userId}` response shape.
 export interface BillingSubscriptionApiResponse {
   id: string
   userId: string
@@ -20,12 +20,31 @@ export interface BillingSubscription {
   priceLabel: string
   expiryDate: string | null
   status: BillingStatusApi
+  /** Billing cycle from API (e.g. monthly / yearly) */
+  billingCycle?: string | null
 }
 
+/** GET /billing/transactions row (Stripe invoice) */
+export interface BillingTransactionApi {
+  id: string
+  number: string
+  amountPaid: number
+  currency: string
+  status: string
+  hostedInvoiceUrl: string
+  invoicePdf: string
+  created: string
+  periodStart: string
+  periodEnd: string
+}
+
+/** Table row for payment history */
 export interface BillingPayment {
-  id: number
+  id: string
   date: string
-  amount: string
-  plan: string
-  status: 'paid' | 'failed'
+  invoiceNumber: string
+  amountLabel: string
+  status: string
+  hostedInvoiceUrl: string
+  invoicePdf: string
 }

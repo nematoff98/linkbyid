@@ -1,33 +1,64 @@
 <script setup lang="ts">
 import type { BillingSubscription } from '~/types/billing'
 
-const props = defineProps<{ subscription: BillingSubscription; loading?: boolean; actionLabel: string }>()
-const emit = defineEmits<{ (e: 'action'): void; (e: 'cancel'): void }>()
+const props = withDefaults(
+  defineProps<{
+    subscription: BillingSubscription
+    loading?: boolean
+    actionLabel: string
+    showPrimaryAction?: boolean
+  }>(),
+  { showPrimaryAction: true }
+)
+const emit = defineEmits<{ (e: 'action'): void }>()
+
+function formatBillingCycle(raw: string | null | undefined): string | null {
+  const c = (raw || '').toLowerCase()
+  if (c === 'yearly' || c === 'annual' || c === 'year') return 'Yearly'
+  if (c === 'monthly' || c === 'month') return 'Monthly'
+  return raw ? String(raw) : null
+}
+
+const metaLine = computed(() => {
+  const s = props.subscription
+  if (s.plan === 'pro') {
+    const parts: string[] = []
+    const cycle = formatBillingCycle(s.billingCycle)
+    if (cycle) parts.push(cycle)
+    if (s.expiryDate) parts.push(`Renews ${s.expiryDate}`)
+    return parts.length ? parts.join(' · ') : null
+  }
+  if (s.plan === 'free') return 'No limits on the Free plan'
+  return null
+})
 </script>
 
 <template>
-  <section class="rounded-2xl border border-neutral-200 bg-white p-5 shadow-sm dark:border-white/10 dark:bg-neutral-900">
-    <div class="flex items-center justify-between">
-      <h2 class="text-base font-semibold text-neutral-900 dark:text-white">Current Plan</h2>
-      <span class="rounded-lg bg-indigo-50 px-2 py-1 text-xs font-semibold uppercase text-indigo-700 dark:bg-indigo-500/20 dark:text-indigo-200">
-        {{ props.subscription.plan }}
-      </span>
-    </div>
-    <p class="mt-2 text-sm text-neutral-600 dark:text-neutral-300">{{ props.subscription.priceLabel }}</p>
-    <p class="mt-1 text-xs text-neutral-500 dark:text-neutral-400">
-      Expiry: {{ props.subscription.expiryDate || 'No expiry for free plan' }}
-    </p>
-    <div class="mt-4 flex flex-wrap gap-2">
-      <button class="rounded-xl bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-500" :disabled="props.loading" @click="emit('action')">
-        {{ props.loading ? 'Redirecting...' : props.actionLabel }}
-      </button>
-      <button
-        v-if="props.subscription.plan === 'pro'"
-        class="rounded-xl border border-red-200 px-4 py-2 text-sm text-red-600 hover:bg-red-50 dark:border-red-400/30 dark:hover:bg-red-500/10"
-        @click="emit('cancel')"
-      >
-        Cancel subscription
-      </button>
+  <section class="rounded-xl border border-neutral-200 bg-white px-4 py-3 shadow-sm dark:border-white/10 dark:bg-neutral-900">
+    <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
+      <div class="min-w-0 flex-1">
+        <div class="flex flex-wrap items-center gap-x-2 gap-y-0.5">
+          <h2 class="text-sm font-semibold text-neutral-900 dark:text-white">Current plan</h2>
+          <span class="rounded-md bg-indigo-50 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-indigo-700 dark:bg-indigo-500/25 dark:text-indigo-200">
+            {{ subscription.plan }}
+          </span>
+        </div>
+        <p class="mt-1 text-sm font-medium text-neutral-800 dark:text-neutral-100">
+          {{ subscription.priceLabel }}
+        </p>
+        <p v-if="metaLine" class="mt-0.5 text-xs leading-snug text-neutral-500 dark:text-neutral-400">
+          {{ metaLine }}
+        </p>
+      </div>
+      <div v-if="showPrimaryAction" class="shrink-0 sm:ml-2">
+        <button
+          class="w-full rounded-lg bg-indigo-600 px-3 py-2 text-sm font-medium text-white hover:bg-indigo-500 sm:w-auto"
+          :disabled="loading"
+          @click="emit('action')"
+        >
+          {{ loading ? 'Redirecting…' : actionLabel }}
+        </button>
+      </div>
     </div>
   </section>
 </template>

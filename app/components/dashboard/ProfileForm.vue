@@ -31,8 +31,8 @@ const onAvatarChange = (event: Event) => {
   const file = (event.target as HTMLInputElement).files?.[0]
   if (!file) return
   const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif']
-  if (!allowedTypes.includes(file.type)) return (formError.value = 'Avatar format: JPEG, PNG, WebP yoki GIF bo‘lishi kerak.')
-  if (file.size > 5 * 1024 * 1024) return (formError.value = 'Avatar hajmi 5MB dan oshmasligi kerak.')
+  if (!allowedTypes.includes(file.type)) return (formError.value = 'Use JPEG, PNG, WebP, or GIF for the avatar.')
+  if (file.size > 5 * 1024 * 1024) return (formError.value = 'Avatar must be 5MB or smaller.')
   formError.value = ''
   avatarFile.value = file
   avatarPreview.value = URL.createObjectURL(file)

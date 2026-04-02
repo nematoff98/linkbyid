@@ -38,7 +38,7 @@ const clearQuery = () => {
 
 <template>
   <div class="relative z-20 mb-5 mt-5 w-full">
-    <label class="mb-2 block text-[11px] font-semibold uppercase tracking-[0.16em] text-neutral-500 sm:pl-1 dark:text-neutral-400">Kod yoki mahsulot nomi</label>
+    <label class="mb-2 block text-[11px] font-semibold uppercase tracking-[0.16em] text-neutral-500 sm:pl-1 dark:text-neutral-400">Code or product name</label>
     <div class="group relative overflow-hidden rounded-2xl border border-neutral-200 bg-white transition-all duration-200 focus-within:border-indigo-400 focus-within:ring-2 focus-within:ring-indigo-400/20 dark:border-white/12 dark:bg-neutral-900">
       <div class="relative flex h-12 items-center sm:h-[56px]">
         <div class="shrink-0 pl-3 pr-2 text-neutral-500 sm:pl-4 dark:text-neutral-400">
@@ -51,7 +51,7 @@ const clearQuery = () => {
           v-model="query"
           @input="handleInput"
           type="search"
-          placeholder="Masalan: 8472"
+          placeholder="e.g. 8472"
           class="h-full w-full flex-1 border-none bg-transparent px-1 text-[14px] font-medium text-neutral-900 placeholder:text-neutral-400 focus:outline-none sm:text-[15px] dark:text-white dark:placeholder:text-neutral-500"
           data-testid="search-input"
         >
