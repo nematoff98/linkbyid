@@ -6,24 +6,29 @@ import PricingCard from '~/components/dashboard/PricingCard.vue'
 definePageMeta({ layout: 'dashboard' })
 
 const {
-  subscription,
+  billingPageSubscription,
   payments,
   actionLoading,
-  subscriptionLoading,
   transactionsLoading,
   actionLabel,
   billingCycleChoice,
   checkoutError,
   getPriceIdForChoice,
+  mvpPromoTrialEnabled,
   startProCheckout,
-  openBillingPortal
+  openBillingPortal,
+  loadTransactions,
+  fetchBillingPageSubscription
 } = useBillingData()
+
+/** Skeleton until GET /billing/subscription/:id completes (avoids flashing Free before Pro). */
+const billingUiReady = ref(false)
 
 const { accessToken } = useAuthSession()
 const config = useRuntimeConfig()
 
-const freeFeatures = ['Up to 10 links', 'Simple profile', 'Support']
-const proFeatures = ['Unlimited links', 'Analytics', 'Theme', 'Faster loading']
+const freeFeatures = ['Up to 10 links', 'Simple profile']
+const proFeatures = ['Unlimited links', 'Analytics', 'Theme', 'Tickets']
 
 const handleAction = () => {
   openBillingPortal()
@@ -32,12 +37,17 @@ const handleAction = () => {
 const goLogin = () => navigateTo({ path: '/login', query: { redirect: '/dashboard/billing' } })
 
 let loginRedirectTimer: ReturnType<typeof setTimeout> | null = null
-onMounted(() => {
+onMounted(async () => {
   if (!accessToken.value) {
     loginRedirectTimer = setTimeout(() => {
       navigateTo({ path: '/login', query: { redirect: '/dashboard/billing' } })
     }, 2800)
+    return
   }
+  billingUiReady.value = false
+  await fetchBillingPageSubscription()
+  billingUiReady.value = true
+  void loadTransactions()
 })
 
 onUnmounted(() => {
@@ -48,9 +58,26 @@ const monthlyConfigured = computed(() => !!getPriceIdForChoice('monthly'))
 const yearlyConfigured = computed(() => !!getPriceIdForChoice('yearly'))
 
 const proPriceDisplay = computed(() => {
+  if (mvpPromoTrialEnabled.value && billingCycleChoice.value === 'yearly') return 'Coming soon'
   const m = String(config.public.billingProMonthlyLabel || '$1.99/mo')
   const y = String(config.public.billingProYearlyLabel || '$15.99/yr')
   return billingCycleChoice.value === 'monthly' ? m : y
+})
+
+const checkoutDisabled = computed(() => {
+  if (actionLoading.value) return true
+  if (mvpPromoTrialEnabled.value) {
+    if (billingCycleChoice.value === 'yearly') return true
+    return false
+  }
+  return billingCycleChoice.value === 'monthly' ? !monthlyConfigured.value : !yearlyConfigured.value
+})
+
+const primaryCtaLabel = computed(() => {
+  if (mvpPromoTrialEnabled.value && billingCycleChoice.value === 'monthly') {
+    return actionLoading.value ? 'Activating…' : 'Activate free trial'
+  }
+  return actionLoading.value ? 'Opening…' : 'Continue to checkout'
 })
 
 useHead({ title: 'Billing | Link by Code' })
@@ -76,6 +103,13 @@ useHead({ title: 'Billing | Link by Code' })
     </section>
 
     <p
+      v-if="accessToken && billingUiReady && mvpPromoTrialEnabled && billingPageSubscription?.plan === 'free'"
+      class="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-900 dark:border-emerald-500/30 dark:bg-emerald-500/10 dark:text-emerald-100"
+    >
+      🎉 Free 1-month trial for early users — activate Pro below with no card required for the trial period.
+    </p>
+
+    <p
       v-if="accessToken && checkoutError"
       class="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800 dark:border-red-500/30 dark:bg-red-500/10 dark:text-red-200"
     >
@@ -83,7 +117,7 @@ useHead({ title: 'Billing | Link by Code' })
     </p>
 
     <div
-      v-if="accessToken && subscriptionLoading"
+      v-if="accessToken && !billingUiReady"
       class="grid grid-cols-1 gap-6 lg:grid-cols-2 lg:items-start"
       aria-hidden="true"
     >
@@ -92,7 +126,7 @@ useHead({ title: 'Billing | Link by Code' })
     </div>
 
     <div
-      v-if="accessToken && !subscriptionLoading && subscription.plan === 'free'"
+      v-if="accessToken && billingUiReady && billingPageSubscription?.plan === 'free'"
       class="grid grid-cols-1 gap-6 lg:grid-cols-2 lg:items-start"
     >
       <PricingCard
@@ -105,7 +139,9 @@ useHead({ title: 'Billing | Link by Code' })
       <PricingCard
         title="Pro"
         :price="proPriceDisplay"
-        description="Price depends on billing period · Pay securely with Stripe"
+        :description="mvpPromoTrialEnabled
+          ? 'Early access: free Pro trial (monthly) · Yearly coming soon'
+          : 'Price depends on billing period · Pay securely with Stripe'"
         :features="proFeatures"
         featured
       >
@@ -120,27 +156,38 @@ useHead({ title: 'Billing | Link by Code' })
           >
             <button
               type="button"
-              class="flex-1 rounded-md px-3 py-2 text-sm font-medium transition-colors"
+              class="flex flex-1 flex-col items-center justify-center gap-0.5 rounded-md px-2 py-2 text-sm font-medium transition-colors sm:flex-row sm:gap-1"
               :class="billingCycleChoice === 'monthly'
                 ? 'bg-white text-neutral-900 shadow-sm dark:bg-neutral-800 dark:text-white'
                 : 'text-neutral-500 hover:text-neutral-800 dark:text-neutral-400 dark:hover:text-neutral-200'"
               @click="billingCycleChoice = 'monthly'"
             >
-              Monthly
+              <span>Monthly</span>
+              <span v-if="mvpPromoTrialEnabled" class="text-[10px] font-normal text-emerald-600 dark:text-emerald-400">Trial</span>
             </button>
             <button
               type="button"
-              class="flex-1 rounded-md px-3 py-2 text-sm font-medium transition-colors"
+              class="relative flex flex-1 flex-col items-center justify-center gap-0.5 rounded-md px-2 py-2 text-sm font-medium transition-colors sm:flex-row sm:gap-1"
               :class="billingCycleChoice === 'yearly'
                 ? 'bg-white text-neutral-900 shadow-sm dark:bg-neutral-800 dark:text-white'
                 : 'text-neutral-500 hover:text-neutral-800 dark:text-neutral-400 dark:hover:text-neutral-200'"
               @click="billingCycleChoice = 'yearly'"
             >
-              Yearly
+              <span>Yearly</span>
+              <span
+                v-if="mvpPromoTrialEnabled"
+                class="text-[10px] font-semibold uppercase tracking-wide text-amber-700 dark:text-amber-300"
+              >Soon</span>
             </button>
           </div>
           <p
-            v-if="(billingCycleChoice === 'monthly' && !monthlyConfigured) || (billingCycleChoice === 'yearly' && !yearlyConfigured)"
+            v-if="mvpPromoTrialEnabled && billingCycleChoice === 'yearly'"
+            class="mt-2 text-xs text-amber-700 dark:text-amber-300"
+          >
+            Yearly billing is not available yet — choose Monthly to start your free trial.
+          </p>
+          <p
+            v-else-if="!mvpPromoTrialEnabled && ((billingCycleChoice === 'monthly' && !monthlyConfigured) || (billingCycleChoice === 'yearly' && !yearlyConfigured))"
             class="mt-2 text-xs text-red-600 dark:text-red-400"
           >
             {{ billingCycleChoice === 'monthly' ? 'Monthly Stripe price ID is not set in env.' : 'Yearly Stripe price ID is not set in env.' }}
@@ -148,18 +195,18 @@ useHead({ title: 'Billing | Link by Code' })
           <button
             type="button"
             class="mt-4 w-full rounded-xl bg-indigo-600 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-indigo-500 disabled:cursor-not-allowed disabled:opacity-50"
-            :disabled="actionLoading || (billingCycleChoice === 'monthly' ? !monthlyConfigured : !yearlyConfigured)"
+            :disabled="checkoutDisabled"
             @click="startProCheckout"
           >
-            {{ actionLoading ? 'Opening…' : 'Continue to checkout' }}
+            {{ primaryCtaLabel }}
           </button>
         </template>
       </PricingCard>
     </div>
 
-    <section v-if="accessToken && !subscriptionLoading && subscription.plan === 'pro'">
+    <section v-if="accessToken && billingUiReady && billingPageSubscription?.plan === 'pro'">
       <BillingPlanCard
-        :subscription="subscription"
+        :subscription="billingPageSubscription"
         :loading="actionLoading"
         :action-label="actionLabel"
         @action="handleAction"

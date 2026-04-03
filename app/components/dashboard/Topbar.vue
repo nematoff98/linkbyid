@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ArrowDown, Menu, Moon, Sunny, SwitchButton, UserFilled } from '@element-plus/icons-vue'
 import { computed, ref } from 'vue'
+import { useBillingData } from '~/composables/useBillingData'
 import { useDashboardData } from '~/composables/useDashboardData'
 import { useDashboardTheme } from '~/composables/useDashboardTheme'
 
@@ -8,8 +9,12 @@ const props = defineProps<{ title: string }>()
 const emit = defineEmits<{ (e: 'toggle-sidebar'): void }>()
 const avatarError = ref(false)
 const { profile } = useDashboardData()
+const { subscription } = useBillingData()
 const { isDark, toggleTheme } = useDashboardTheme()
-const { clearSession } = useAuthSession()
+const { accessToken, clearSession } = useAuthSession()
+const { navReady } = useDashboardNavReady()
+
+const showThemeToggle = computed(() => navReady.value && subscription.value.plan === 'pro')
 const hasAvatar = computed(() => Boolean(profile.value.avatar?.trim()) && !avatarError.value)
 
 const logout = async () => {
@@ -37,6 +42,8 @@ const onCommand = (command: string | number | object) => {
     </div>
     <div class="relative flex items-center gap-2">
       <button
+        v-if="showThemeToggle"
+        type="button"
         class="flex h-9 w-9 items-center justify-center rounded-xl border border-neutral-200 bg-white text-neutral-700 transition-all duration-200 hover:shadow-md dark:border-white/10 dark:bg-neutral-800 dark:text-neutral-200"
         @click="toggleTheme"
       >

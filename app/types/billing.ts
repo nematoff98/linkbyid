@@ -2,7 +2,7 @@ export type PlanType = 'free' | 'pro'
 
 export type BillingStatusApi = 'active' | 'inactive'
 
-// Matches backend `/billing/subscription/{userId}` response shape.
+/** GET `/billing/subscription/{userId}` → `data` (Billing page uses this; `/profiles/me` drives global nav/roles). */
 export interface BillingSubscriptionApiResponse {
   id: string
   userId: string

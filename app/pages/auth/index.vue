@@ -59,7 +59,7 @@ useHead({
 
         <div class="mt-6 space-y-3">
           <AuthProviderButton label="Continue with Google" provider="google" :loading="loadingProvider === 'google'" @select="handleAuth" />
-          <AuthProviderButton label="Continue with Apple" provider="apple" :loading="loadingProvider === 'apple'" @select="handleAuth" />
+<!--          <AuthProviderButton label="Continue with Apple" provider="apple" :loading="loadingProvider === 'apple'" @select="handleAuth" />-->
         </div>
         <p v-if="authError" class="mt-3 text-sm text-red-400">{{ authError }}</p>
 

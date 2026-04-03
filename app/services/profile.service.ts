@@ -14,6 +14,14 @@ export interface MeResponse {
       avatarUrl?: string | null
       createdAt?: string
     } | null
+    /** Plan & billing summary (same source as sidebar / pro gates). */
+    subscription?: {
+      plan: 'free' | 'pro'
+      billing_cycle?: string | null
+      status?: string
+      source?: string
+      current_period_end?: string | null
+    } | null
   }
 }
 
@@ -29,6 +37,8 @@ interface PublicProfileByUsernameResponse {
     username?: string
     bio?: string
     avatarUrl?: string
+    /** When set to `free`, theme toggle is hidden on the public profile. */
+    plan?: 'free' | 'pro'
   }
 }
 
@@ -49,10 +59,12 @@ export const profileService = {
   async getByUsername(username: string) {
     const api = useApi()
     const response = await api<PublicProfileByUsernameResponse>(`/profiles/by-username/${encodeURIComponent(username)}`, { method: 'GET' })
+    const plan = response?.data?.plan
     return {
       username: response?.data?.username || username,
       bio: response?.data?.bio || '',
-      avatarUrl: response?.data?.avatarUrl || ''
+      avatarUrl: response?.data?.avatarUrl || '',
+      plan: plan === 'free' || plan === 'pro' ? plan : undefined
     }
   }
 }

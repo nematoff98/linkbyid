@@ -17,7 +17,9 @@ const username = route.params.username as string
 const profile = reactive({
   username,
   bio: '',
-  avatarUrl: ''
+  avatarUrl: '',
+  /** `free` = hide theme toggle; omit or `pro` = show (backward compatible if API omits field). */
+  plan: undefined as undefined | 'free' | 'pro'
 })
 
 const isSearching = ref(false)
@@ -112,28 +114,39 @@ const trackProductClick = (product: Product) => {
   analyticsService.trackClick(username, product.code, referrer).catch(() => {})
 }
 
+const showThemeToggle = computed(() => profile.plan !== 'free')
+
 const loadProfile = async () => {
   try {
     const response = await profileService.getByUsername(username)
     profile.username = response.username
     profile.bio = response.bio
     profile.avatarUrl = response.avatarUrl
+    profile.plan = response.plan
   } catch {
     profile.username = username
     profile.bio = ''
     profile.avatarUrl = ''
+    profile.plan = undefined
   }
 }
 
 useHead(() => ({
-  title: `@${profile.username || username} | Link by Code`,
-  meta: [{ name: 'description', content: profile.bio || 'Public profile' }]
+  title: `@${profile.username || username} – Product links & codes`,
+  meta: [
+    {
+      name: 'description',
+      content:
+        profile.bio ||
+        `Explore ${profile.username}'s product recommendations. Find items easily using simple codes.`,
+    },
+  ],
 }))
 </script>
 
 <template>
   <PageWrapper :is-dark="isDark">
-    <div class="mb-5 flex justify-end">
+    <div v-if="showThemeToggle" class="mb-5 flex justify-end">
       <button
         type="button"
         class="inline-flex cursor-pointer items-center gap-2 rounded-full border border-neutral-200 bg-white px-3 py-1.5 text-xs font-medium text-neutral-700 transition hover:bg-neutral-50 dark:border-white/15 dark:bg-neutral-800 dark:text-neutral-200 dark:hover:bg-neutral-700"

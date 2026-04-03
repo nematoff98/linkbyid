@@ -1,2 +1,19 @@
 @import "tailwindcss";
 @custom-variant dark (&:where(.dark, .dark *));
+
+/* Element Plus: inputs / textareas use --el-fill-color-blank (white); align with dashboard dark UI */
+.dark {
+  --el-fill-color-blank: #262626;
+  --el-fill-color-light: rgba(255, 255, 255, 0.06);
+  --el-border-color: rgba(255, 255, 255, 0.12);
+  --el-border-color-hover: rgba(255, 255, 255, 0.2);
+  --el-text-color-regular: #e5e5e5;
+  --el-text-color-primary: #fafafa;
+  --el-text-color-placeholder: #a3a3a3;
+  --el-text-color-secondary: #a3a3a3;
+  --el-disabled-bg-color: #262626;
+  --el-disabled-border-color: rgba(255, 255, 255, 0.08);
+  --el-disabled-text-color: #737373;
+  --el-bg-color: #171717;
+  --el-bg-color-overlay: #262626;
+}

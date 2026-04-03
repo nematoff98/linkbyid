@@ -1,16 +1,43 @@
 <script setup lang="ts">
-import { DataAnalysis, Link, Setting, User } from '@element-plus/icons-vue'
+import { DataAnalysis, Link, Setting, Tickets, User } from '@element-plus/icons-vue'
 import { computed } from 'vue'
+import { useBillingData } from '~/composables/useBillingData'
 import { useDashboardTheme } from '~/composables/useDashboardTheme'
 
 const route = useRoute()
 const { isDark } = useDashboardTheme()
-const items = [
-  { label: 'Statistics', to: '/dashboard/statistics', icon: DataAnalysis },
-  { label: 'Profile', to: '/dashboard/profile', icon: User },
-  { label: 'Links', to: '/dashboard/links', icon: Link },
-  { label: 'Billing', to: '/dashboard/billing', icon: Setting }
-]
+const { subscription } = useBillingData()
+const { navReady } = useDashboardNavReady()
+
+const showProNav = computed(() => subscription.value.plan === 'pro')
+
+const activeMenuPath = computed(() => {
+  const p = route.path
+  if (p.startsWith('/dashboard/tickets')) return '/dashboard/tickets'
+  return p
+})
+
+const allNavItems = [
+  { label: 'Statistics', to: '/dashboard/statistics', icon: DataAnalysis, proOnly: true },
+  { label: 'Profile', to: '/dashboard/profile', icon: User, proOnly: false },
+  { label: 'Links', to: '/dashboard/links', icon: Link, proOnly: false },
+  { label: 'Billing', to: '/dashboard/billing', icon: Setting, proOnly: false },
+  { label: 'Tickets', to: '/dashboard/tickets', icon: Tickets, proOnly: true }
+] as const
+
+const items = computed(() => {
+  if (showProNav.value) return [...allNavItems]
+  return allNavItems.filter(i => !i.proOnly)
+})
+
+/** Remount menu when route or visible items change so `default-active` re-applies (el-menu quirk). */
+const menuRemountKey = computed(
+  () => `${route.fullPath}::${activeMenuPath.value}::${navReady.value}::${items.value.map(i => i.to).join('|')}`
+)
+
+const onMenuSelect = (index: string) => {
+  if (index && index !== route.path) void navigateTo(index)
+}
 
 const menuStyle = computed(() => isDark.value ? {
   '--el-menu-bg-color': 'transparent',
@@ -32,10 +59,12 @@ const menuStyle = computed(() => isDark.value ? {
       <p class="text-xs text-neutral-500 dark:text-neutral-400">SaaS Dashboard</p>
     </div>
     <el-menu
-      :default-active="route.path"
-      router
+      v-if="navReady"
+      :key="menuRemountKey"
+      :default-active="activeMenuPath"
       class="dashboard-menu !border-none bg-transparent"
       :style="menuStyle"
+      @select="onMenuSelect"
     >
       <el-menu-item
         v-for="item in items"

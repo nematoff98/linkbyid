@@ -1,5 +1,7 @@
+import type { BillingSubscription } from '~/types/billing'
 import type { DashboardLink, ProfileSettings } from '~/types/dashboard'
 import { profileService } from '~/services/profile.service'
+import { defaultBillingSubscriptionState, mapMeSubscriptionToBilling } from '~/utils/subscriptionFromMe'
 
 interface LinkInput {
   code?: string
@@ -19,6 +21,10 @@ export const useDashboardData = () => {
   const currentUserId = useState<string>('dashboard-user-id', () => '')
   const profileLoading = useState<boolean>('dashboard-profile-loading', () => false)
   const profileLoaded = useState<boolean>('dashboard-profile-loaded', () => false)
+
+  const subscription = useState<BillingSubscription>('billing-subscription', () => ({
+    ...defaultBillingSubscriptionState
+  }))
 
   const totalClicks = computed(() => links.value.reduce((sum, link) => sum + link.clicks, 0))
   const recentLinks = computed(() => [...links.value].sort((a, b) => b.createdAt.localeCompare(a.createdAt)).slice(0, 5))
@@ -58,7 +64,7 @@ export const useDashboardData = () => {
   }
 
   const loadMyProfile = async (force = false) => {
-    if (profileLoading.value) return
+    if (profileLoading.value && !force) return
     if (profileLoaded.value && !force) return
 
     const { accessToken } = useAuthSession()
@@ -66,6 +72,7 @@ export const useDashboardData = () => {
       currentUserId.value = ''
       profile.value = { username: '', bio: '', avatar: '' }
       profileLoaded.value = false
+      subscription.value = { ...defaultBillingSubscriptionState }
       return
     }
 
@@ -74,12 +81,16 @@ export const useDashboardData = () => {
       const response = await profileService.getMe()
       const userData = response.data?.user
       const profileData = response.data?.profile
+      const config = useRuntimeConfig()
+      const monthly = String(config.public.billingProMonthlyLabel || '$1.99/mo')
+      const yearly = String(config.public.billingProYearlyLabel || '$15.99/yr')
       currentUserId.value = userData?.id || ''
       profile.value = {
         username: profileData?.username || '',
         bio: profileData?.bio || '',
         avatar: profileData?.avatarUrl || userData?.avatarUrl || ''
       }
+      subscription.value = mapMeSubscriptionToBilling(response.data?.subscription, monthly, yearly)
       profileLoaded.value = true
     } finally {
       profileLoading.value = false
@@ -89,8 +100,10 @@ export const useDashboardData = () => {
   return {
     links,
     profile,
+    subscription,
     currentUserId,
     profileLoading,
+    profileLoaded,
     totalClicks,
     recentLinks,
     generateCode,

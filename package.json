@@ -1,5 +1,5 @@
 {
-  "name": "website",
+  "name": "link_by_id",
   "type": "module",
   "private": true,
   "scripts": {
@@ -15,6 +15,7 @@
     "@element-plus/icons-vue": "^2.3.2",
     "@morev/vue-transitions": "^3.0.5",
     "@nuxt/eslint": "^1.15.2",
+    "@nuxtjs/sitemap": "^8.0.11",
     "@nuxtjs/toast": "^3.3.1",
     "@tailwindcss/vite": "^4.2.2",
     "chart.js": "^4.5.1",

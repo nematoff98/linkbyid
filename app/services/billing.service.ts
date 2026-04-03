@@ -89,5 +89,11 @@ export const billingService = {
   async getTransactions() {
     const api = useApi()
     return billingFetchTransactions(api)
+  },
+
+  /** POST /api/billing/mvp-promo/activate — MVP free Pro trial (no Stripe checkout). */
+  async activateMvpPromo() {
+    const api = useApi()
+    return await api('/billing/mvp-promo/activate', { method: 'POST', body: {} })
   }
 }

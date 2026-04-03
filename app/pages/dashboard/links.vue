@@ -86,8 +86,8 @@ const cancelEdit = () => { editingLink.value = null }
 const prevPage = async () => { if (page.value > 1) { page.value -= 1; await loadLinks() } }
 const nextPage = async () => { if (page.value < totalPages.value) { page.value += 1; await loadLinks() } }
 
-onMounted(async () => {
-  await Promise.allSettled([loadMyProfile(), loadLinks()])
+onMounted(() => {
+  void loadLinks()
 })
 </script>
 

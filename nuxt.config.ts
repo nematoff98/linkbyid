@@ -22,7 +22,11 @@ export default defineNuxtConfig({
         || '',
       /** Display labels (must match your Stripe products; env overrides defaults) */
       billingProMonthlyLabel: process.env.NUXT_PUBLIC_BILLING_PRO_PRICE_MONTHLY_LABEL || '$1.99/mo',
-      billingProYearlyLabel: process.env.NUXT_PUBLIC_BILLING_PRO_PRICE_YEARLY_LABEL || '$15.99/yr'
+      billingProYearlyLabel: process.env.NUXT_PUBLIC_BILLING_PRO_PRICE_YEARLY_LABEL || '$15.99/yr',
+      /** When true: monthly Pro uses POST /billing/mvp-promo/activate (free trial); yearly is coming soon; Stripe checkout only when false */
+      mvpPromoTrial: ['true', '1', 'yes'].includes(
+        String(process.env.NUXT_PUBLIC_MVP_PROMO_TRIAL || '').toLowerCase().trim()
+      )
     }
   },
   css: ['~/assets/css/main.css'],
@@ -31,5 +35,9 @@ export default defineNuxtConfig({
       tailwindcss(),
     ],
   },
-  modules: ['@element-plus/nuxt', '@nuxt/eslint'],
+  modules: ['@element-plus/nuxt', '@nuxt/eslint', '@nuxtjs/sitemap'],
+  site: {
+    url: 'https://getlinkid.com',
+    name: 'Find Products by Code – Link by Code'
+  },
 })

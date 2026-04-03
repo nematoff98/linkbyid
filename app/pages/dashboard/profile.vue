@@ -9,16 +9,17 @@ import { getApiErrorMessage } from '~/utils/apiError'
 
 definePageMeta({ layout: 'dashboard' })
 
-const { profile, currentUserId, loadMyProfile } = useDashboardData()
+const { profile, currentUserId, loadMyProfile, profileLoading: dashboardProfileLoading } = useDashboardData()
 const saved = ref(false)
 const draftProfile = ref<ProfileSettings>({ ...profile.value })
+/** Local spinner for explicit refresh in loadProfile() */
 const profileLoading = ref(false)
 const saveLoading = ref(false)
 const pageError = ref('')
 
 watch(profile, (value) => {
   draftProfile.value = { ...value }
-}, { deep: true })
+}, { deep: true, immediate: true })
 
 const normalizeAvatarUrl = (value: string) => {
   const trimmed = value.trim()
@@ -75,13 +76,11 @@ const saveProfile = async (payload: { profile: ProfileSettings; avatarFile: File
 const updatePreview = (payload: ProfileSettings) => {
   draftProfile.value = payload
 }
-
-onMounted(loadProfile)
 </script>
 
 <template>
   <div>
-    <p v-if="profileLoading" class="mb-3 text-sm text-neutral-500 dark:text-neutral-400">Loading profile…</p>
+    <p v-if="dashboardProfileLoading || profileLoading" class="mb-3 text-sm text-neutral-500 dark:text-neutral-400">Loading profile…</p>
     <p v-if="pageError" class="mb-3 rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700 dark:border-red-500/30 dark:bg-red-500/10 dark:text-red-300">{{ pageError }}</p>
     <div class="grid grid-cols-1 gap-5 xl:grid-cols-2">
       <div :class="saveLoading ? 'pointer-events-none opacity-70' : ''">

@@ -10,11 +10,41 @@ import FinalCta from '~/components/landing/FinalCta.vue'
 import Footer from '~/components/landing/Footer.vue'
 
 useHead({
-  title: 'Link by Code - Share Products Smarter',
+  title: "Find Products by Code – Link by Code",
   meta: [
-    { name: 'description', content: 'Turn simple codes into powerful product links. Combine link in bio with search by code.' }
-  ]
-})
+    {
+      name: "description",
+      content:
+        "Find products instantly by code or name. Perfect for TikTok, Instagram, and creators. No links needed. Just type the code.",
+    },
+    {
+      name: "keywords",
+      content:
+        "find product by code, tiktok product finder, instagram product search, link alternative, creator tools",
+    },
+    {
+      property: "og:title",
+      content: "Find Products by Code – Link by Code",
+    },
+    {
+      property: "og:description",
+      content:
+        "No links? No problem. Just type the code and find the product instantly.",
+    },
+    {
+      property: "og:type",
+      content: "website",
+    },
+    {
+      property: "og:image",
+      content: "https://yourdomain.com/og-image.png",
+    },
+    {
+      name: "twitter:card",
+      content: "summary_large_image",
+    },
+  ],
+});
 </script>
 
 <template>
