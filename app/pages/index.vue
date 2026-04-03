@@ -7,6 +7,7 @@ import Demo from '~/components/landing/Demo.vue'
 import Pricing from '~/components/landing/Pricing.vue'
 import Faq from '~/components/landing/Faq.vue'
 import FinalCta from '~/components/landing/FinalCta.vue'
+import AboutExplanation from '~/components/landing/AboutExplanation.vue'
 import Footer from '~/components/landing/Footer.vue'
 
 useHead({
@@ -37,7 +38,7 @@ useHead({
     },
     {
       property: "og:image",
-      content: "https://yourdomain.com/og-image.png",
+      content: "https://getlinkid.com/og-image.png",
     },
     {
       name: "twitter:card",
@@ -64,6 +65,7 @@ useHead({
         <Pricing />
         <Faq />
         <FinalCta />
+        <AboutExplanation />
       </main>
       <Footer />
     </div>
