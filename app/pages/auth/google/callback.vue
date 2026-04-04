@@ -36,7 +36,7 @@ onMounted(async () => {
 
   setTokens({ accessToken, refreshToken, provider })
   window.history.replaceState({}, document.title, window.location.pathname)
-  await navigateTo('/dashboard', { replace: true })
+  await navigateTo('/dashboard/profile', { replace: true })
 })
 </script>
 

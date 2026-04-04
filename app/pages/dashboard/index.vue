@@ -1,6 +1,6 @@
 <script setup lang="ts">
 definePageMeta({
   layout: 'dashboard',
-  redirect: '/dashboard/statistics'
+  redirect: '/dashboard/profile'
 })
 </script>

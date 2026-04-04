@@ -21,7 +21,7 @@ const handleAuth = async (provider: 'google' | 'apple') => {
     const email = 'apple.user@linkbycode.dev'
     const response = await authService.oauthCallback(provider, email)
     setSession(response.data)
-    await navigateTo('/dashboard/statistics', { replace: true })
+    await navigateTo('/dashboard/profile', { replace: true })
   } catch (error) {
     authError.value = error instanceof Error ? error.message : 'Authorization failed'
   } finally {

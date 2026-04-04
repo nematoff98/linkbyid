@@ -42,4 +42,14 @@ export default defineNuxtConfig({
     url: 'https://getlinkid.com',
     name: 'Find Products by Code – Link by Code'
   },
+  sitemap: {
+    exclude: [
+      '/dashboard/**',
+      '/auth/**',
+    ],
+    include: [
+      '/',
+      '/u/**'
+    ]
+  }
 })

@@ -5,5 +5,5 @@ export default defineNuxtRouteMiddleware((to) => {
   const isAuthRoute = to.path.startsWith('/auth')
 
   if (isDashboardRoute && !hasToken) return navigateTo('/auth')
-  if (isAuthRoute && hasToken) return navigateTo('/dashboard')
+  if (isAuthRoute && hasToken) return navigateTo('/dashboard/profile')
 })

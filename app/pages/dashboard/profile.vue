@@ -112,11 +112,33 @@ const saveProfile = async (payload: { profile: ProfileSettings; avatarFile: File
 const updatePreview = (payload: ProfileSettings) => {
   draftProfile.value = payload
 }
+
+const profileDataReady = computed(
+  () => !dashboardProfileLoading.value && !profileLoading.value
+)
+
+/** Saved profile has no username — user must set it before sharing /u/… */
+const showUsernameRequiredBanner = computed(
+  () => profileDataReady.value && !profile.value.username?.trim()
+)
 </script>
 
 <template>
   <div>
     <p v-if="dashboardProfileLoading || profileLoading" class="mb-3 text-sm text-neutral-500 dark:text-neutral-400">Loading profile…</p>
+
+    <div
+      v-if="showUsernameRequiredBanner"
+      role="alert"
+      class="mb-4 rounded-2xl border border-amber-300/90 bg-amber-50 px-4 py-3 text-sm text-amber-950 dark:border-amber-500/40 dark:bg-amber-500/10 dark:text-amber-100"
+    >
+      <p class="font-semibold text-amber-900 dark:text-amber-50">Set your username first</p>
+      <p class="mt-1 text-amber-900/90 dark:text-amber-100/90">
+        Choose a unique username below and click <span class="font-medium">Save profile</span>. Your public page
+        (<span class="font-mono text-xs">/u/username</span>) and share link only work after you save a username.
+      </p>
+    </div>
+
     <p v-if="pageError" class="mb-3 rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700 dark:border-red-500/30 dark:bg-red-500/10 dark:text-red-300">{{ pageError }}</p>
 
     <section
