@@ -43,13 +43,24 @@ export default defineNuxtConfig({
     name: 'Find Products by Code – Link by Code'
   },
   sitemap: {
+    // ❌ Private sahifalarni chiqaramiz
     exclude: [
       '/dashboard/**',
       '/auth/**',
     ],
+
+    // ✅ Public sahifalar
     include: [
       '/',
       '/u/**'
-    ]
+    ],
+
+    // 🔥 ENG MUHIM QISM (dynamic users)
+    sources: [
+      'https://linkbycode.com/public/sitemap-users'
+    ],
+
+    // 🔥 performance uchun (tavsiya)
+    cacheMaxAgeSeconds: 3600
   }
 })
