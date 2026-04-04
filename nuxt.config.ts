@@ -61,6 +61,6 @@ export default defineNuxtConfig({
     ],
 
     // 🔥 performance uchun (tavsiya)
-    cacheMaxAgeSeconds: 3600
+    cacheMaxAgeSeconds: 0,
   }
 })
