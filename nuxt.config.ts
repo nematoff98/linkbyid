@@ -57,7 +57,7 @@ export default defineNuxtConfig({
 
     // 🔥 ENG MUHIM QISM (dynamic users)
     sources: [
-      'https://linkbycode.com/public/sitemap-users'
+      'https://api.linkbycode.com/public/sitemap-users'
     ],
 
     // 🔥 performance uchun (tavsiya)
