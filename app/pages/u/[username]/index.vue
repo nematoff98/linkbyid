@@ -114,7 +114,8 @@ const trackProductClick = (product: Product) => {
   analyticsService.trackClick(username, product.code, referrer).catch(() => {})
 }
 
-const showThemeToggle = computed(() => profile.plan !== 'free')
+/** Only Pro profiles get light/dark toggle; free and unknown (loading) stay without control. */
+const showThemeToggle = computed(() => profile.plan === 'pro')
 
 const loadProfile = async () => {
   try {

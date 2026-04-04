@@ -6,8 +6,10 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   runtimeConfig: {
     public: {
+      /** Canonical site origin for share links (e.g. https://linkbycode.com). Falls back to current host in dev. */
+      siteUrl: process.env.NUXT_PUBLIC_SITE_URL || '',
       apiBase: (() => {
-        const raw = process.env.NUXT_PUBLIC_API_BASE_URL || process.env.NUXT_PUBLIC_API_BASE || process.env.VITE_APP_MAIN_BASE_URL || 'http://localhost:4000'
+        const raw = process.env.NUXT_PUBLIC_API_BASE || process.env.VITE_APP_MAIN_BASE_URL || ''
         return raw.replace(/\/+$/, '').replace(/\/api$/, '')
       })(),
       stripePriceProMonthlyId:
