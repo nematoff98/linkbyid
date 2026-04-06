@@ -1,3 +1,5 @@
+import { resolveMediaUrl } from '~/utils/resolveMediaUrl'
+
 export interface MeResponse {
   data: {
     user: {
@@ -57,13 +59,16 @@ export const profileService = {
     return await api(`/profiles/${userId}`, { method: 'PUT', body: formData })
   },
   async getByUsername(username: string) {
+    const config = useRuntimeConfig()
+    const apiBase = String(config.public.apiBase || '')
     const api = useApi()
     const response = await api<PublicProfileByUsernameResponse>(`/profiles/by-username/${encodeURIComponent(username)}`, { method: 'GET' })
     const plan = response?.data?.plan
+    const rawAvatar = response?.data?.avatarUrl || ''
     return {
       username: response?.data?.username || username,
       bio: response?.data?.bio || '',
-      avatarUrl: response?.data?.avatarUrl || '',
+      avatarUrl: resolveMediaUrl(typeof rawAvatar === 'string' ? rawAvatar : '', apiBase),
       plan: plan === 'free' || plan === 'pro' ? plan : undefined
     }
   }

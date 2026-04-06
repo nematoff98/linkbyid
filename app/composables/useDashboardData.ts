@@ -2,6 +2,7 @@ import type { BillingSubscription } from '~/types/billing'
 import type { DashboardLink, ProfileSettings } from '~/types/dashboard'
 import { profileService } from '~/services/profile.service'
 import { defaultBillingSubscriptionState, mapMeSubscriptionToBilling } from '~/utils/subscriptionFromMe'
+import { resolveMediaUrl } from '~/utils/resolveMediaUrl'
 
 interface LinkInput {
   code?: string
@@ -85,10 +86,12 @@ export const useDashboardData = () => {
       const monthly = String(config.public.billingProMonthlyLabel || '$1.99/mo')
       const yearly = String(config.public.billingProYearlyLabel || '$15.99/yr')
       currentUserId.value = userData?.id || ''
+      const apiBase = String(config.public.apiBase || '')
+      const rawAvatar = profileData?.avatarUrl || userData?.avatarUrl || ''
       profile.value = {
         username: profileData?.username || '',
         bio: profileData?.bio || '',
-        avatar: profileData?.avatarUrl || userData?.avatarUrl || ''
+        avatar: resolveMediaUrl(typeof rawAvatar === 'string' ? rawAvatar : '', apiBase)
       }
       subscription.value = mapMeSubscriptionToBilling(response.data?.subscription, monthly, yearly)
       profileLoaded.value = true

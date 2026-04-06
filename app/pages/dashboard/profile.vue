@@ -69,19 +69,6 @@ const normalizeAvatarUrl = (value: string) => {
   }
 }
 
-const loadProfile = async (withLoading = true) => {
-  if (withLoading) profileLoading.value = true
-  pageError.value = ''
-  try {
-    await loadMyProfile(true)
-    draftProfile.value = { ...profile.value }
-  } catch (error) {
-    pageError.value = getApiErrorMessage(error)
-  } finally {
-    if (withLoading) profileLoading.value = false
-  }
-}
-
 const saveProfile = async (payload: { profile: ProfileSettings; avatarFile: File | null }) => {
   if (!currentUserId.value) return
   const cleanUsername = payload.profile.username?.trim() || ''
@@ -100,6 +87,7 @@ const saveProfile = async (payload: { profile: ProfileSettings; avatarFile: File
     })
     await loadMyProfile(true)
     draftProfile.value = { ...profile.value }
+    pendingAvatarPreview.value = null
     saved.value = true
     setTimeout(() => { saved.value = false }, 1500)
   } catch (error) {
@@ -112,6 +100,18 @@ const saveProfile = async (payload: { profile: ProfileSettings; avatarFile: File
 const updatePreview = (payload: ProfileSettings) => {
   draftProfile.value = payload
 }
+
+/** Blob URL from ProfileForm — show in PublicProfilePreview before Save. */
+const pendingAvatarPreview = ref<string | null>(null)
+
+const onAvatarPreview = (url: string | null) => {
+  pendingAvatarPreview.value = url
+}
+
+const previewProfile = computed(() => ({
+  ...draftProfile.value,
+  avatar: pendingAvatarPreview.value || draftProfile.value.avatar
+}))
 
 const profileDataReady = computed(
   () => !dashboardProfileLoading.value && !profileLoading.value
@@ -173,9 +173,15 @@ const showUsernameRequiredBanner = computed(
 
     <div class="grid grid-cols-1 gap-5 xl:grid-cols-2">
       <div :class="saveLoading ? 'pointer-events-none opacity-70' : ''">
-        <ProfileForm :model-value="draftProfile" :loading="saveLoading" @save="saveProfile" @change="updatePreview" />
+        <ProfileForm
+          :model-value="draftProfile"
+          :loading="saveLoading"
+          @save="saveProfile"
+          @change="updatePreview"
+          @avatar-preview="onAvatarPreview"
+        />
       </div>
-      <PublicProfilePreview :profile="draftProfile" />
+      <PublicProfilePreview :profile="previewProfile" />
     </div>
     <p v-if="saved" class="mt-3 text-sm text-emerald-600">Profile saved.</p>
   </div>
