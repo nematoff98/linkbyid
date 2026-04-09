@@ -148,8 +148,23 @@ onUnmounted(() => clearPartialWarningTimer())
     <p v-if="partialWarning" class="text-xs text-amber-700 dark:text-amber-300">{{ partialWarning }}</p>
     <p v-if="metadataError || formError" class="text-xs text-red-600 dark:text-red-400">{{ metadataError || formError }}</p>
     <div class="flex items-center gap-2">
-      <button type="submit" class="rounded-xl bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition-all duration-200 hover:bg-indigo-500" :disabled="props.loading">Save link</button>
-      <button v-if="props.initialLink" type="button" class="rounded-xl border border-neutral-200 px-4 py-2 text-sm dark:border-white/10" @click="emit('cancel')">Cancel</button>
+      <button
+        type="submit"
+        class="inline-flex min-w-[7.5rem] items-center justify-center rounded-xl bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition-all duration-200 hover:bg-indigo-500 disabled:cursor-not-allowed disabled:opacity-70"
+        :disabled="props.loading"
+        :aria-busy="props.loading"
+      >
+        {{ props.loading ? 'Saving…' : 'Save link' }}
+      </button>
+      <button
+        v-if="props.initialLink"
+        type="button"
+        class="rounded-xl border border-neutral-200 px-4 py-2 text-sm disabled:cursor-not-allowed disabled:opacity-50 dark:border-white/10"
+        :disabled="props.loading"
+        @click="emit('cancel')"
+      >
+        Cancel
+      </button>
     </div>
   </form>
 </template>

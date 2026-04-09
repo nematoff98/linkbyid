@@ -3,6 +3,25 @@ import tailwindcss from "@tailwindcss/vite";
 
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
+  app: {
+    head: {
+      script: [
+        {
+          src: 'https://www.googletagmanager.com/gtag/js?id=G-GMZHWT1R9L',
+          async: true
+        },
+        {
+          innerHTML: `
+           window.dataLayer = window.dataLayer || [];
+           function gtag(){dataLayer.push(arguments);}
+           gtag('js', new Date());
+        
+           gtag('config', 'G-GMZHWT1R9L');
+          `
+        }
+      ]
+    }
+  },
   devtools: { enabled: true },
   runtimeConfig: {
     public: {
