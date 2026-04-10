@@ -3,7 +3,7 @@ import { ref, onMounted } from 'vue'
 
 const isTyping = ref(true)
 const typedCode = ref('')
-const selectedCode = '8472'
+const selectedCode = 'XM5'
 let timer: ReturnType<typeof setTimeout>
 
 onMounted(() => { startTypingAnimation() })

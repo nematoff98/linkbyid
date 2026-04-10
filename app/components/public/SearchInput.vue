@@ -51,7 +51,7 @@ const clearQuery = () => {
           v-model="query"
           @input="handleInput"
           type="search"
-          placeholder="e.g. 8472"
+          placeholder="e.g. XM5"
           class="h-full w-full flex-1 border-none bg-transparent px-1 text-[14px] font-medium text-neutral-900 placeholder:text-neutral-400 focus:outline-none sm:text-[15px] dark:text-white dark:placeholder:text-neutral-500"
           data-testid="search-input"
         >

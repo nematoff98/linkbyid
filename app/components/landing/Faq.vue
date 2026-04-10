@@ -4,15 +4,15 @@ import { ref } from 'vue'
 const faqs = [
   {
     question: 'What is Link by Code?',
-    answer: 'Link by Code is a tool that allows creators to turn long, messy product links into simple 4-digit codes. Instead of asking followers to clunkily navigate deep into your Linktree, they just enter the code on your bio link and go straight to the product.'
+    answer: 'Link by Code is a tool that allows creators to turn long, messy product links into simple, memorable codes—letters, numbers, or both, in a format that fits your workflow. Instead of asking followers to clunkily navigate deep into your Linktree, they just enter the code on your bio link and go straight to the product.'
   },
   {
     question: 'How does the code system work?',
-    answer: 'When you paste a URL into our dashboard, we automatically generate a short numeric code (e.g., 8472). You share this code on your videos. Users go to your bio link, type it into the search bar, and get instantly redirected.'
+    answer: 'When you paste a URL into our dashboard, we pair it with a short code for that product. You share this code on your videos. Users go to your bio link, type it into the search bar, and get instantly redirected.'
   },
   {
     question: 'Can I customize my codes?',
-    answer: 'On the Pro plan, you can create custom alphanumeric codes (like "CAMERA" or "SETUP") instead of the randomly generated 4-digit numbers to better fit your branding or specific campaigns.'
+    answer: 'Yes. Pro gives you the most flexibility to choose and manage custom codes (like "CAMERA" or "SETUP")—letters, numbers, or both—so they match your branding or campaigns.'
   },
   {
     question: 'Is it really free?',

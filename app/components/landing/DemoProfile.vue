@@ -15,7 +15,7 @@
       <div class="absolute inset-y-0 left-4 flex items-center pointer-events-none transition-transform group-focus-within:scale-110">
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-indigo-400"><path d="m21 21-6-6m2-5a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z"/></svg>
       </div>
-      <input type="text" placeholder="Enter product code (e.g. 1942)" class="w-full bg-neutral-900 border border-neutral-800 rounded-2xl py-4 pl-12 pr-4 text-white placeholder:text-neutral-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all shadow-inner">
+      <input type="text" placeholder="Enter product code (e.g. XM5)" class="w-full bg-neutral-900 border border-neutral-800 rounded-2xl py-4 pl-12 pr-4 text-white placeholder:text-neutral-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all shadow-inner">
     </div>
 
     <!-- Example links -->
@@ -26,7 +26,7 @@
           </div>
           <div class="flex-1">
             <h5 class="text-sm font-semibold text-white group-hover:text-indigo-300 transition-colors">Apple Watch Ultra</h5>
-            <p class="text-xs text-neutral-500">Code: 1942</p>
+            <p class="text-xs text-neutral-500">Code: ULTRA</p>
           </div>
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-neutral-600 group-hover:text-white transition-colors group-hover:translate-x-1"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
        </div>

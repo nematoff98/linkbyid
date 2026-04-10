@@ -52,7 +52,7 @@ const handleSubmit = () => {
         v-model="query"
         @input="handleInput"
         type="search" 
-        placeholder="Enter product code (e.g. 8472)" 
+        placeholder="Enter product code (e.g. XM5)" 
         class="w-full bg-transparent border-none py-5 pl-14 pr-28 text-white placeholder:text-neutral-500 focus:outline-none focus:ring-0 text-lg sm:text-xl md:text-2xl font-mono text-center sm:text-left transition-colors"
       >
       

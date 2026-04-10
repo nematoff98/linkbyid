@@ -2,7 +2,7 @@
 const features = [
   {
     title: 'Code-based Access',
-    description: 'Transform complex URLs into 4-digit codes. Simple to say on video, simple to type.',
+    description: 'Transform complex URLs into short codes—letters, numbers, or a mix, in a length that works for you. Simple to say on video, simple to type.',
     icon: '0101'
   },
   {
