@@ -2,6 +2,7 @@ import type { HowItWorksSectionIntro, HowItWorksStep } from './types'
 
 import img1 from '~/assets/img/dashboard/how-works/1.png'
 import img2 from '~/assets/img/dashboard/how-works/2.png'
+import imgProfileCopyLink from '~/assets/img/dashboard/how-works/two.png'
 
 export const howItWorksIntro: HowItWorksSectionIntro = {
   title: 'How the dashboard works',
@@ -32,6 +33,16 @@ export const profileSteps: HowItWorksStep[] = [
     ],
     imageSrc: img1,
     imageAlt: 'Profile settings with username and copy-link field highlighted',
+  },
+  {
+    id: 'p1b',
+    title: 'Copy your link and place it where followers will tap',
+    body: [
+      'The red highlight is the copy button for your public profile URL—one click copies the full link.',
+      'Paste it wherever you need it: TikTok or Instagram bio, “link in bio” tools, video descriptions, or any profile field where you want people to open your page and search by code.',
+    ],
+    imageSrc: imgProfileCopyLink,
+    imageAlt: 'Profile page with copy public link button highlighted',
   },
   {
     id: 'p2',
