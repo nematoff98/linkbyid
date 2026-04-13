@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { DataAnalysis, Link, Setting, Tickets, User } from '@element-plus/icons-vue'
+import { DataAnalysis, Link, Reading, Setting, Tickets, User } from '@element-plus/icons-vue'
 import { computed } from 'vue'
 import { useBillingData } from '~/composables/useBillingData'
 import { useDashboardTheme } from '~/composables/useDashboardTheme'
@@ -20,6 +20,7 @@ const activeMenuPath = computed(() => {
 const allNavItems = [
   { label: 'Statistics', to: '/dashboard/statistics', icon: DataAnalysis, proOnly: true },
   { label: 'Profile', to: '/dashboard/profile', icon: User, proOnly: false },
+  { label: 'How it works', to: '/dashboard/how-it-works', icon: Reading, proOnly: false },
   { label: 'Links', to: '/dashboard/links', icon: Link, proOnly: false },
   { label: 'Billing', to: '/dashboard/billing', icon: Setting, proOnly: false },
   { label: 'Tickets', to: '/dashboard/tickets', icon: Tickets, proOnly: true }
