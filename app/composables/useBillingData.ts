@@ -5,6 +5,7 @@ import { useAuthSession } from '~/composables/useAuthSession'
 import { useDashboardData } from '~/composables/useDashboardData'
 import { getUserIdFromAccessToken } from '~/utils/jwt'
 import { defaultBillingSubscriptionState, mapBillingSubscriptionApiToBilling } from '~/utils/subscriptionFromMe'
+import { computeMvpPromoTrialActive } from '~/utils/mvpPromoCampaign'
 
 export type BillingCycleChoice = 'monthly' | 'yearly'
 
@@ -58,7 +59,13 @@ export const useBillingData = () => {
 
   const config = useRuntimeConfig()
 
-  const mvpPromoTrialEnabled = computed(() => Boolean(config.public.mvpPromoTrial))
+  const mvpPromoTrialEnabled = computed(() =>
+    computeMvpPromoTrialActive({
+      mvpPromoTrial: Boolean(config.public.mvpPromoTrial),
+      mvpPromoCampaignStartAt: String(config.public.mvpPromoCampaignStartAt || ''),
+      mvpPromoNewUserWindowDays: Number(config.public.mvpPromoNewUserWindowDays),
+    }),
+  )
 
   const resolveUserId = (): string | null => {
     const fromState = authUserId.value || currentUserId.value
@@ -159,7 +166,8 @@ export const useBillingData = () => {
 
     if (mvpPromoTrialEnabled.value) {
       if (billingCycleChoice.value === 'yearly') {
-        checkoutError.value = 'Yearly billing is coming soon.'
+        checkoutError.value =
+          'Yearly Stripe checkout is available after the free campaign window ends. Use Monthly for the free trial, or try again later.'
         return
       }
       actionLoading.value = true

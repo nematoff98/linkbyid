@@ -21,6 +21,8 @@ const {
   fetchBillingPageSubscription
 } = useBillingData()
 
+const { mvpPromoTrialFlag, isPromoWindowOpen, promoWindowEndsLabel } = useMvpPromoCampaign()
+
 /** Skeleton until GET /billing/subscription/:id completes (avoids flashing Free before Pro). */
 const billingUiReady = ref(false)
 
@@ -106,7 +108,17 @@ useHead({ title: 'Billing | Link by Code' })
       v-if="accessToken && billingUiReady && mvpPromoTrialEnabled && billingPageSubscription?.plan === 'free'"
       class="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-900 dark:border-emerald-500/30 dark:bg-emerald-500/10 dark:text-emerald-100"
     >
-      🎉 Free 1-month trial for early users — activate Pro below with no card required for the trial period.
+      🎉 Free 1-month Pro trial — activate below with no card
+      <span v-if="promoWindowEndsLabel"> (campaign through {{ promoWindowEndsLabel }})</span>.
+      Paid <strong class="font-semibold">monthly</strong> or <strong class="font-semibold">yearly</strong> with Stripe unlocks after your free month ends (yearly checkout also opens after the campaign window ends).
+    </p>
+
+    <p
+      v-if="accessToken && billingUiReady && mvpPromoTrialFlag && !isPromoWindowOpen && billingPageSubscription?.plan === 'free'"
+      class="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-950 dark:border-amber-500/35 dark:bg-amber-500/10 dark:text-amber-100"
+    >
+      The introductory free campaign has ended<span v-if="promoWindowEndsLabel"> (closed {{ promoWindowEndsLabel }})</span>.
+      Subscribe to Pro with Stripe — monthly or yearly below.
     </p>
 
     <p
@@ -140,8 +152,10 @@ useHead({ title: 'Billing | Link by Code' })
         title="Pro"
         :price="proPriceDisplay"
         :description="mvpPromoTrialEnabled
-          ? 'Early access: free Pro trial (monthly) · Yearly coming soon'
-          : 'Price depends on billing period · Pay securely with Stripe'"
+          ? 'Free Pro activation on monthly during the campaign · Paid monthly/yearly after your free month (or yearly checkout when enabled)'
+          : mvpPromoTrialFlag
+            ? 'Campaign window ended — pay monthly or yearly with Stripe'
+            : 'Price depends on billing period · Pay securely with Stripe'"
         :features="proFeatures"
         featured
       >
@@ -184,7 +198,13 @@ useHead({ title: 'Billing | Link by Code' })
             v-if="mvpPromoTrialEnabled && billingCycleChoice === 'yearly'"
             class="mt-2 text-xs text-amber-700 dark:text-amber-300"
           >
-            Yearly billing is not available yet — choose Monthly to start your free trial.
+            During the free campaign, yearly paid checkout opens after the campaign window ends — use Monthly for the free trial, or wait to pay yearly.
+          </p>
+          <p
+            v-if="mvpPromoTrialEnabled && billingCycleChoice === 'monthly'"
+            class="mt-2 text-xs text-neutral-600 dark:text-neutral-400"
+          >
+            After the free month ends, you can move to paid monthly or yearly billing in Stripe.
           </p>
           <p
             v-else-if="!mvpPromoTrialEnabled && ((billingCycleChoice === 'monthly' && !monthlyConfigured) || (billingCycleChoice === 'yearly' && !yearlyConfigured))"

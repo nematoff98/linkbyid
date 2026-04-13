@@ -1,14 +1,21 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 
-const config = useRuntimeConfig()
-const mvpPromoTrial = computed(() => Boolean(config.public.mvpPromoTrial))
+const { isPromoWindowOpen, mvpPromoTrialFlag, promoWindowEndsLabel } = useMvpPromoCampaign()
+const { accessToken } = useAuthSession()
+
+/** Signed in → billing to upgrade; otherwise auth to sign up / log in. */
+const goProHref = computed(() => (accessToken.value ? '/dashboard/billing' : '/auth'))
 
 const isAnnual = ref(false)
 
-watch(mvpPromoTrial, (on) => {
-  if (on) isAnnual.value = false
-}, { immediate: true })
+watch(
+  isPromoWindowOpen,
+  (open) => {
+    if (open) isAnnual.value = false
+  },
+  { immediate: true },
+)
 </script>
 
 <template>
@@ -19,13 +26,30 @@ watch(mvpPromoTrial, (on) => {
       <p class="text-neutral-400 text-base sm:text-lg">Start for free, upgrade when you need supercharged features.</p>
 
       <p
-        v-if="mvpPromoTrial"
+        v-if="isPromoWindowOpen"
         class="mx-auto max-w-lg rounded-2xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-3 text-sm font-medium text-emerald-200"
       >
-        🎉 Free 1-month trial for early users — monthly Pro, no card for the trial. Yearly plans coming soon.
+        🎉 Free 1-month Pro on <strong class="font-semibold text-emerald-100">monthly</strong> for new users during the campaign
+        <span v-if="promoWindowEndsLabel"> — through <strong class="font-semibold text-emerald-100">{{ promoWindowEndsLabel }}</strong></span>.
+        Yearly is <strong class="font-semibold text-emerald-100">$15.99/year</strong> (no free trial on yearly).
       </p>
 
-      <div v-if="!mvpPromoTrial" class="flex items-center justify-center gap-3 pt-6">
+      <p
+        v-else-if="mvpPromoTrialFlag && !isPromoWindowOpen"
+        class="mx-auto max-w-lg rounded-2xl border border-amber-500/35 bg-amber-500/10 px-4 py-3 text-sm font-medium text-amber-100"
+      >
+        The introductory free campaign has ended<span v-if="promoWindowEndsLabel"> (window closed {{ promoWindowEndsLabel }})</span>.
+        Pro is <strong class="font-semibold text-amber-50">$1.99/mo</strong> or <strong class="font-semibold text-amber-50">$15.99/yr</strong> via Stripe.
+      </p>
+
+      <p
+        v-if="isPromoWindowOpen"
+        class="mx-auto max-w-lg text-xs leading-relaxed text-neutral-500 dark:text-neutral-400"
+      >
+        Paid <strong class="text-neutral-400">monthly</strong> or <strong class="text-neutral-400">yearly</strong> with a card is available after your free Pro month ends; yearly checkout in the app follows the same campaign rules.
+      </p>
+
+      <div class="flex items-center justify-center gap-3 pt-6">
         <span class="text-sm font-medium" :class="!isAnnual ? 'text-white' : 'text-neutral-500'">Monthly</span>
         <button
           type="button"
@@ -38,9 +62,8 @@ watch(mvpPromoTrial, (on) => {
             :class="isAnnual ? 'translate-x-6' : ''"
           />
         </button>
-        <span class="text-sm font-medium" :class="isAnnual ? 'text-white' : 'text-neutral-500'">Yearly <span class="ml-1 text-xs text-indigo-400">-20%</span></span>
+        <span class="text-sm font-medium" :class="isAnnual ? 'text-white' : 'text-neutral-500'">Yearly <span class="ml-1 text-xs text-indigo-400">$15.99/yr</span></span>
       </div>
-      <p v-else class="pt-6 text-center text-sm text-neutral-400">Monthly billing · Yearly coming soon</p>
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto px-4">
@@ -77,15 +100,25 @@ watch(mvpPromoTrial, (on) => {
         
         <h4 class="text-xl sm:text-2xl font-bold text-white mb-2">Pro Creator</h4>
         <p class="text-neutral-400 mb-6 text-sm">Everything you need to scale your affiliate earnings.</p>
-        <div class="flex items-end gap-1 mb-8">
-          <template v-if="mvpPromoTrial && !isAnnual">
-            <span class="text-4xl sm:text-5xl font-black text-white">$0</span>
-            <span class="text-neutral-500 mb-1 font-medium">/ first month · then <span class="text-neutral-300">$1.99</span>/mo</span>
-          </template>
-          <template v-else>
-            <span class="text-4xl sm:text-5xl font-black text-white">$<span v-if="isAnnual">1.59</span><span v-else>1.99</span></span>
-            <span class="text-neutral-500 mb-1 font-medium">/ month</span>
-          </template>
+        <div class="mb-8">
+          <div class="flex flex-wrap items-end gap-x-1 gap-y-0.5">
+            <template v-if="isPromoWindowOpen && !isAnnual">
+              <span class="text-4xl sm:text-5xl font-black text-white">$0</span>
+              <span class="text-neutral-500 mb-1 font-medium">/ first month · then <span class="text-neutral-300">$1.99</span>/mo</span>
+            </template>
+            <template v-else-if="isAnnual">
+              <span class="text-4xl sm:text-5xl font-black text-white">$15.99</span>
+              <span class="text-neutral-500 mb-1 font-medium">/ year</span>
+            </template>
+            <template v-else>
+              <span class="text-4xl sm:text-5xl font-black text-white">$1.99</span>
+              <span class="text-neutral-500 mb-1 font-medium">/ month</span>
+            </template>
+          </div>
+          <p v-if="isAnnual" class="mt-2 text-xs text-neutral-500">Billed annually · about $1.33/mo</p>
+          <p v-if="isPromoWindowOpen && !isAnnual" class="mt-2 text-xs text-neutral-500">
+            Paid card billing for monthly starts after the free month ends.
+          </p>
         </div>
         <ul class="space-y-4 mb-8">
           <li class="flex items-center gap-3 text-neutral-200 font-medium">
@@ -105,7 +138,12 @@ watch(mvpPromoTrial, (on) => {
             Priority support always
           </li>
         </ul>
-        <button class="w-full py-3.5 rounded-xl bg-white text-neutral-950 font-bold hover:bg-neutral-100 transition-colors shadow-lg shadow-white/10 hover:shadow-white/20 hover:scale-[1.02] active:scale-[0.98]">Go Pro</button>
+        <NuxtLink
+          :to="goProHref"
+          class="flex w-full items-center justify-center py-3.5 text-center text-base font-bold text-neutral-950 no-underline transition-colors hover:bg-neutral-100 rounded-xl bg-white shadow-lg shadow-white/10 hover:shadow-white/20 hover:scale-[1.02] active:scale-[0.98]"
+        >
+          Go Pro
+        </NuxtLink>
       </div>
 
     </div>

@@ -44,10 +44,24 @@ export default defineNuxtConfig({
       /** Display labels (must match your Stripe products; env overrides defaults) */
       billingProMonthlyLabel: process.env.NUXT_PUBLIC_BILLING_PRO_PRICE_MONTHLY_LABEL || '$1.99/mo',
       billingProYearlyLabel: process.env.NUXT_PUBLIC_BILLING_PRO_PRICE_YEARLY_LABEL || '$15.99/yr',
-      /** When true: monthly Pro uses POST /billing/mvp-promo/activate (free trial); yearly is coming soon; Stripe checkout only when false */
+      /** When true: monthly Pro may use POST /billing/mvp-promo/activate while window is open */
       mvpPromoTrial: ['true', '1', 'yes'].includes(
         String(process.env.NUXT_PUBLIC_MVP_PROMO_TRIAL || '').toLowerCase().trim()
-      )
+      ),
+      /** ISO date (e.g. 2025-01-01) — start of MVP free-new-user window */
+      mvpPromoCampaignStartAt:
+        process.env.NUXT_PUBLIC_BILLING_MVP_PROMO_CAMPAIGN_START_AT
+        || process.env.BILLING_MVP_PROMO_CAMPAIGN_START_AT
+        || '',
+      /** Days from start — after this, free MVP activation ends; Stripe monthly/yearly applies */
+      mvpPromoNewUserWindowDays: Number.parseInt(
+        String(
+          process.env.NUXT_PUBLIC_BILLING_MVP_PROMO_NEW_USER_WINDOW_DAYS
+          || process.env.BILLING_MVP_PROMO_NEW_USER_WINDOW_DAYS
+          || '0',
+        ),
+        10,
+      ) || 0,
     }
   },
   css: ['~/assets/css/main.css'],
