@@ -114,7 +114,16 @@ const submit = () => {
     </div>
     <input v-model="profileForm.username" type="text" placeholder="Username" class="w-full rounded-xl border border-neutral-200 px-3 py-2 text-sm dark:border-white/10 dark:bg-neutral-800">
     <input v-model="profileForm.avatar" type="url" placeholder="Avatar URL (https://...)" class="w-full rounded-xl border border-neutral-200 px-3 py-2 text-sm dark:border-white/10 dark:bg-neutral-800" @input="onAvatarUrlInput">
-    <textarea v-model="profileForm.bio" rows="3" placeholder="Bio" class="w-full rounded-xl border border-neutral-200 px-3 py-2 text-sm dark:border-white/10 dark:bg-neutral-800" />
+    <label class="block">
+      <span class="mb-2 block text-[11px] font-semibold uppercase tracking-[0.16em] text-neutral-500 dark:text-neutral-400">Bio</span>
+      <textarea
+        v-model="profileForm.bio"
+        rows="6"
+        placeholder="Tell visitors about you. Line breaks are kept on your public profile."
+        class="min-h-[140px] w-full resize-y rounded-xl border border-neutral-200 px-3 py-2 text-sm leading-relaxed dark:border-white/10 dark:bg-neutral-800"
+      />
+      <p class="mt-1.5 text-xs text-neutral-500 dark:text-neutral-400">Press Enter for a new line — spacing matches what visitors see.</p>
+    </label>
     <p v-if="formError" class="text-xs text-red-600">{{ formError }}</p>
     <button type="submit" :disabled="props.loading" class="rounded-xl bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition-all duration-200 hover:bg-indigo-500 disabled:cursor-not-allowed disabled:opacity-70">{{ props.loading ? 'Saving...' : 'Save profile' }}</button>
   </form>

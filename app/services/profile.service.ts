@@ -53,7 +53,7 @@ export const profileService = {
     const api = useApi()
     const formData = new FormData()
     formData.append('username', payload.username)
-    if (payload.bio) formData.append('bio', payload.bio)
+    formData.append('bio', payload.bio ?? '')
     if (payload.avatar) formData.append('avatar', payload.avatar)
     else if (payload.avatarUrl) formData.append('avatarUrl', payload.avatarUrl)
     return await api(`/profiles/${userId}`, { method: 'PUT', body: formData })

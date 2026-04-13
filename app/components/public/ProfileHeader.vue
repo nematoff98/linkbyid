@@ -24,7 +24,10 @@ defineProps<{
 
       <div class="mb-5 mt-4 space-y-2 px-3">
         <h1 class="text-[24px] font-bold tracking-tight text-neutral-900 sm:text-[28px] dark:text-white">@{{ username }}</h1>
-        <p v-if="bio" class="mx-auto max-w-[460px] text-[14px] leading-relaxed text-neutral-600 sm:text-[15px] dark:text-neutral-300">{{ bio }}</p>
+        <p
+          v-if="bio"
+          class="mx-auto max-w-[460px] whitespace-pre-wrap break-words text-[14px] leading-relaxed text-neutral-600 sm:text-[15px] dark:text-neutral-300"
+        >{{ bio }}</p>
       </div>
     </div>
   </div>

@@ -138,7 +138,7 @@ useHead(() => ({
     {
       name: 'description',
       content:
-        profile.bio ||
+        (profile.bio && profile.bio.replace(/\s+/g, ' ').trim()) ||
         `Explore ${profile.username}'s product recommendations. Find items easily using simple codes.`,
     },
   ],

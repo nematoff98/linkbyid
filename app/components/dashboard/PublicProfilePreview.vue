@@ -20,7 +20,7 @@ const previewUsername = computed(() => props.profile.username?.trim() || 'your_u
         <img v-else :src="avatarIcon" alt="Default avatar icon" class="h-full w-full scale-75 object-contain">
       </div>
       <h3 class="mt-3 text-xl font-semibold text-neutral-900 dark:text-white">@{{ previewUsername }}</h3>
-      <p class="mt-1 max-w-sm text-sm text-neutral-600 dark:text-neutral-300">{{ props.profile.bio || 'Your bio will appear here.' }}</p>
+      <p class="mt-1 max-w-sm whitespace-pre-wrap break-words text-sm text-neutral-600 dark:text-neutral-300">{{ props.profile.bio || 'Your bio will appear here.' }}</p>
     </div>
 
     <div class="mt-5">
