@@ -2,6 +2,7 @@
 import { ref, onMounted, computed, reactive } from 'vue'
 import { useRoute } from 'vue-router'
 import PageWrapper from '~/components/public/PageWrapper.vue'
+import PublicProfileVisitorCta from '~/components/public/PublicProfileVisitorCta.vue'
 import ProfileHeader from '~/components/public/ProfileHeader.vue'
 import SearchInput from '~/components/public/SearchInput.vue'
 import ProductCard from '~/components/public/ProductCard.vue'
@@ -10,6 +11,7 @@ import type { Product } from '~/components/public/ProductCard.vue'
 import { linksService } from '~/services/links.service'
 import { profileService } from '~/services/profile.service'
 import { analyticsService } from '~/services/analytics.service'
+import { isLinkbycodeDemoProfile } from '~/utils/demoProfile'
 
 const route = useRoute()
 const username = route.params.username as string
@@ -117,6 +119,11 @@ const trackProductClick = (product: Product) => {
 /** Only Pro profiles get light/dark toggle; free and unknown (loading) stay without control. */
 const showThemeToggle = computed(() => profile.plan === 'pro')
 
+/** Demo profile + match — arms delayed conversion sheet (see `LINKBYCODE_DEMO_USERNAME`). */
+const demoConversionArmed = computed(
+  () => isLinkbycodeDemoProfile(profile.username || username) && searchResult.value !== null,
+)
+
 const loadProfile = async () => {
   try {
     const response = await profileService.getByUsername(username)
@@ -165,10 +172,17 @@ useHead(() => ({
       @query-change="handleQueryChange"
     />
 
-    <div class="relative mb-4 mt-1 h-[190px] w-full border-b border-b-neutral-200 dark:border-white/12 sm:mb-5 sm:h-[190px]">
+    <div
+      class="relative mb-4 mt-1 w-full border-b border-b-neutral-200 pb-1 dark:border-white/12 sm:mb-5 sm:pb-2"
+    >
       <Transition name="fade" mode="out-in">
-        <div v-if="showSearchHint" class="w-full h-full flex justify-center items-center">
-          <p class="text-center text-[12px] text-neutral-500 dark:text-neutral-400">Enter a code — results appear here.</p>
+        <div
+          v-if="showSearchHint"
+          class="flex min-h-[190px] w-full items-center justify-center px-0.5 py-2"
+        >
+          <p class="text-center text-[12px] text-neutral-500 dark:text-neutral-400">
+            Enter a code — results appear here.
+          </p>
         </div>
 
         <div v-else-if="searchResult" class="w-full py-2">
@@ -182,7 +196,7 @@ useHead(() => ({
           <ProductCard :product="searchResult" @card-click="trackProductClick" />
         </div>
 
-        <div v-else-if="searchError && !isSearching" class="w-full pt-2">
+        <div v-else-if="searchError && !isSearching" class="w-full min-h-[120px] pt-2 pb-4">
           <EmptyState title="Code not found" message="Check the code and try again." />
         </div>
       </Transition>
@@ -206,6 +220,8 @@ useHead(() => ({
          Powered by LinkByCode
        </span>
     </div>
+
+    <PublicProfileVisitorCta :armed="demoConversionArmed" />
   </PageWrapper>
 </template>
 
